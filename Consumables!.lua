@@ -120,6 +120,8 @@ local MASTER_DB = {
     { id=8423,  name="Cerebral Cortex Compound", icon="inv_potion_119" },    
     { id=8411,  name="Lung Juice Cocktail", icon="inv_drink_20" },
     { id=7676,  name="Thistle Tea", icon="inv_drink_milk_05" },    
+    { id=6452,  name="Anti-Venom", icon="inv_misc_slime_01" },       
+    { id=6453,  name="Strong Anti-Venom", icon="inv_misc_slime_01" },       
 
     
     -- === EXPLOSIVES ===
