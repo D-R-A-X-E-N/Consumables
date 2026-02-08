@@ -816,10 +816,8 @@ function UpdateTrackers()
         
         -- Master Visibility Control
         if settings.mouseover then
-            -- FIX: Set initial alpha immediately based on current mouse position
             local startAlpha = MouseIsOver(MAIN_CONTAINER) and 1 or 0
             MAIN_CONTAINER:SetAlpha(startAlpha)
-
             MAIN_CONTAINER:SetScript("OnUpdate", function()
                 local over = MouseIsOver(this)
                 if over and this:GetAlpha() < 1 then this:SetAlpha(1)
@@ -870,13 +868,38 @@ function UpdateTrackers()
             frame:EnableMouse(true)
             frame:RegisterForDrag("LeftButton")
 
+            -- MOVE SCRIPTS FOR THE FRAME ITSELF
+            frame:SetScript("OnDragStart", function() 
+                if IsAltKeyDown() then 
+                    local dragTarget = independent and this or MAIN_CONTAINER
+                    dragTarget:StartMoving()
+                    dragTarget.isMoving = true
+                end 
+            end)
+            frame:SetScript("OnDragStop", function() 
+                local dragTarget = independent and this or MAIN_CONTAINER
+                if dragTarget and dragTarget.isMoving then
+                    dragTarget:StopMovingOrSizing()
+                    dragTarget.isMoving = false
+                    if independent then SaveCategoryPosition(this, this.catIndex) else SavePosition() end
+                end
+            end)
+            frame:SetScript("OnMouseDown", function()
+                if arg1 == "RightButton" and IsAltKeyDown() then
+                    if independent then
+                        catData.alignRight = not catData.alignRight
+                    else
+                        ConsumablesDB.settings.alignRight = not ConsumablesDB.settings.alignRight
+                    end
+                    UPDATE_QUEUED = true
+                end
+            end)
+
             -- Independent Frame Mouseover
             if independent then
                 if settings.mouseover then
-                    -- FIX: Set initial alpha for independent frames
                     local startAlpha = MouseIsOver(frame) and 1 or 0
                     frame:SetAlpha(startAlpha)
-
                     frame:SetScript("OnUpdate", function()
                         local over = MouseIsOver(this)
                         if over and this:GetAlpha() < 1 then this:SetAlpha(1)
@@ -895,8 +918,7 @@ function UpdateTrackers()
                     frame:SetBackdrop(nil)
                 end
             else
-                -- Grouped Mode: Must inherit Alpha from Main Container
-                -- FIX: We no longer force Alpha 1 here so it obeys MAIN_CONTAINER alpha
+                -- Grouped Mode: Inherits from MAIN_CONTAINER
                 frame:SetScript("OnUpdate", nil)
                 frame:SetBackdrop(nil)
             end
@@ -1461,8 +1483,7 @@ local function CreateConfigWindow()
     ctrlText:SetWidth(200)
     ctrlText:SetText("|cffffffffClick Icon:|r Use Item/Cast Spell\n\n" ..
                      "|cffffffffAlt + Left Drag:|r Move Main Frame (or Group)\n\n" ..
-                     "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n" ..
-                     "To edit or add items, edit the MASTER_DB table at the top of the Lua file.")
+                     "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n")
 
     -- FOOTER CREDIT
     local creditText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
