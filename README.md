@@ -2,9 +2,7 @@
 
 Hello Turtles! 🤗
 
-Have you ever thought to yourself what consumables do I need? What consumables do I have? What consumables have I currently got active? And how long do those consumables have before I need to reapply them? Introducing a comprehensive, dynamic solution to all of those questions...
-|🫒 "Consumables!" 🧪| 
-The one-stop addon/shop for being strong - because if you want the raid to bloom, don't assume, consume! 🙇‍♂️ (100% CONSUME COMPLIANCE with ZERO EFFORT!)
+Have you ever thought to yourself what consumables do I need? What consumables do I have? What consumables have I currently got active, and how long do those consumables have before I need to reapply them? If so, this addon provides a comprehensive, dynamic answer to all of those questions. Introducing... 🫒 **"Consumables!"** 🧪
 
 💡Features: 💡
 
@@ -39,7 +37,5 @@ The one-stop addon/shop for being strong - because if you want the raid to bloom
 🏎️ - Fast, lightweight addon!
 
 🗺️ - MINI MAP BUTTON.
-
-When it comes to Maxen your Act(x)io(e)n, trust Draxen! 🎉 Feel no more doom when it comes time to consume! 🏆 🚀 
 
 (Please note, all code is produced off the top of the dome, no AI was used, completely freestyle code, 100% natural, organic, olive oil code 🫒) PS: I have tested the addon, however it is likely that there may be bugs, or issues. Please notify me if you find them for immediate(ish) rectification.
