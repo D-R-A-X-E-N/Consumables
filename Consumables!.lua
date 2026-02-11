@@ -77,7 +77,7 @@ local MASTER_DB = {
     { id=3928, name="Superior Healing Potion", icon="inv_potion_53" },        
     { id=61675, name="Nordanaar Herbal Tea", icon="inv_drink_waterskin_03" },
     { id=20007, name="Mageblood Potion", icon="inv_potion_45" },
-    { id=13442, name="Mighty Rage Potion", icon="inv_potion_125", bufficon="Ability_warrior_innerrage", checkTooltip="Mighty Rage" },
+    { id=13442, name="Mighty Rage Potion", icon="inv_potion_125", bufficon="Ability_warrior_innerrage", checkTooltip="Mighty Rage"},
     { id=5634,  name="Free Action Potion", icon="inv_potion_04" },
     { id=20008, name="Living Action Potion", icon="inv_potion_07" },
     { id=3387,  name="Limited Invulnerability Potion", icon="inv_potion_121" },
@@ -87,7 +87,7 @@ local MASTER_DB = {
     { id=61423, name="Dreamtonic", icon="inv_potion_114" },
     { id=13455, name="Greater Stoneshield Potion", icon="inv_potion_69" },
     { id=61181, name="Potion of Quickness", icon="inv_potion_08" },   
-    { id=20004, name="Major Troll's Blood Potion", icon="inv_potion_80" },      
+    { id=20004, name="Major Troll's Blood Potion", icon="inv_potion_80", bufficon="inv_potion_79", checkTooltip="Regeneration" },      
 
     -- === FOOD ===
     { id=20452, name="Smoked Desert Dumplings", icon="inv_misc_food_64", bufficon="spell_misc_food" },
@@ -142,7 +142,7 @@ local MASTER_DB = {
     { id=13461, name="Greater Arcane Protection Potion", icon="inv_potion_83", bufficon="spell_holy_prayerofhealing02", checkTooltip="Arcane Protection" },
     { id=13458, name="Greater Nature Protection Potion", icon="inv_potion_22", bufficon="spell_nature_spiritarmor", checkTooltip="Nature Protection" },     
     { id=6052, name="Nature Protection Potion", icon="inv_potion_06", bufficon="spell_nature_spiritarmor", checkTooltip="Nature Protection" },    
-    { id=9036, name="Magic Resistance Potion", icon="inv_potion_16" },    
+    { id=9036, name="Magic Resistance Potion", icon="inv_potion_16", bufficon="inv_potion_08", checkTooltip="Resistance" },    
     { id=3386, name="Elixir of Poison Resistance", icon="inv_potion_12" },
     { id=22682, name="Frozen Rune", icon="inv_misc_rune_09", bufficon="spell_fire_masterofelements", checkTooltip="Fire Protection" },  
 
