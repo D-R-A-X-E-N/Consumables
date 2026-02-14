@@ -47,6 +47,7 @@ local MASTER_DB = {
     -- === ELIXIRS ===
     { id=13452, name="Elixir of the Mongoose", icon="inv_potion_32" },
     { id=9206,  name="Elixir of Giants", icon="inv_potion_61" },
+    { id=13447, name="Elixir of the Sages", icon="inv_potion_142" },    
     { id=13453, name="Elixir of Brute Force", icon="inv_potion_36" },
     { id=9264,  name="Elixir of Shadow Power", icon="inv_potion_46" },
     { id=21546, name="Elixir of Greater Firepower", icon="inv_potion_60" },
@@ -172,6 +173,19 @@ local MASTER_DB = {
     { id=3829,  name="Frost Oil (OH)", icon="inv_potion_130" },
     { id=3824,  name="Shadowoil (MH)", icon="inv_potion_106" },
     { id=3824,  name="Shadowoil (OH)", icon="inv_potion_106" },
+
+    { id=16893, name="Soulstone", icon="spell_shadow_soulgem", bufficon="spell_shadow_soulgem", checkTooltip="Soulstone Resurrection" },
+    { id=13603, name="Major Spellstone", icon="inv_misc_gem_sapphire_01", bufficon="temp.png", checkTooltip="Increased Critical Spell" },
+    { id=13602, name="Greater Spellstone", icon="inv_misc_gem_sapphire_01", bufficon="temp.png", checkTooltip="Increased Critical Spell" },
+    { id=5522,  name="Spellstone", icon="inv_misc_gem_sapphire_01", bufficon="temp.png", checkTooltip="Increased Critical Spell" },    
+    { id=51933, name="Spellstone", icon="inv_misc_gem_sapphire_01" },
+    { id=51936, name="Voidstone", icon="inv_enchant_voidsphere.png" },  
+    { id=51935, name="Wrathstone", icon="inv_misc_gem_bloodstone_02.png" },     
+    { id=51934, name="Felstone", icon="inv_misc_gem_felstone.png" },      
+    { id=1254,  name="Lesser Firestone", icon="inv_misc_gem_bloodstone_02.png", bufficon="spell_fire_meteorstorm.png", checkTooltip="Firestone Passive"  },                  
+    { id=13699, name="Firestone", icon="inv_misc_gem_bloodstone_02.png", bufficon="spell_fire_meteorstorm.png", checkTooltip="Firestone Passive"  },   
+    { id=13700, name="Greater Firestone", icon="inv_misc_gem_bloodstone_02.png", bufficon="spell_fire_meteorstorm.png", checkTooltip="Firestone Passive"  },  
+    { id=13701, name="Major Firestone", icon="inv_misc_gem_bloodstone_02.png", bufficon="spell_fire_meteorstorm.png", checkTooltip="Firestone Passive"  },      
 
     { id=0,     name="Windfury Weapon (MH)", icon="spell_nature_cyclone" },
     { id=0,     name="Windfury Weapon (OH)", icon="spell_nature_cyclone" },
