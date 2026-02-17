@@ -52,7 +52,7 @@ local MASTER_DB = {
     { id=9264,  name="Elixir of Shadow Power", icon="inv_potion_46" },
     { id=21546, name="Elixir of Greater Firepower", icon="inv_potion_60" },
     { id=50237, name="Elixir of Greater Nature Power", icon="inv_potion_106" },   
-    { id=55048, name="Elixir of Greater Arcane Power", icon="inv_potion_81" },     
+    { id=55048, name="Elixir of Greater Arcane Power", icon="inv_potion_81", bufficon="spell_holy_flashheal", checkTooltip="Greater Arcane Power" },
     { id=13454, name="Greater Arcane Elixir", icon="inv_potion_25" },
     { id=17708, name="Elixir of Frost Power", icon="inv_potion_03" },
     { id=9187,  name="Arcane Elixir", icon="inv_potion_30" },
