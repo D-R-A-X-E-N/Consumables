@@ -269,6 +269,7 @@ local MASTER_DB = {
     { id=0, name="Soulstone Resurrection", icon="spell_shadow_soulgem" },
     { id=0, name="Detect Greater Invisibility", icon="spell_shadow_detectlesserinvisibility" },
     { id=0, name="Unending Breath", icon="spell_shadow_demonbreath" },
+    { id=0, name="Demonic Sacrifice", icon="spell_shadow_psychicscream"},   
 
     { id=0, name="Battle Shout", icon="ability_warrior_battleshout" },
     { id=0, name="Berserker Rage", icon="spell_nature_ancestralguardian" },
