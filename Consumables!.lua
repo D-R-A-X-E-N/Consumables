@@ -90,6 +90,11 @@ local MASTER_DB = {
     { id=61181, name="Potion of Quickness", icon="inv_potion_08" , bufficon="spell_nature_invisibilty", checkTooltip="Potion of Quickness" },   
     { id=20004, name="Major Troll's Blood Potion", icon="inv_potion_80", bufficon="inv_potion_79", checkTooltip="Regeneration" },      
 
+        -- === Healthstones ===
+    { id=9421, name="Major Healthstone(1200)", icon="inv_stone_17" },
+    { id=19012, name="Major Healthstone(1320) ", icon="inv_stone_18" },
+    { id=19013, name="Major Healthstone(1440)", icon="inv_stone_04" },
+    
     -- === FOOD ===
     { id=20452, name="Smoked Desert Dumplings", icon="inv_misc_food_64", bufficon="spell_misc_food" },
     { id=13928, name="Grilled Squid", icon="inv_misc_fish_13", bufficon="spell_misc_food" },
