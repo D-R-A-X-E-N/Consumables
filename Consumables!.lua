@@ -212,51 +212,51 @@ local MASTER_DB = {
     { id=0,     name="Wound Poison (OH)", icon="ability_poisonsting" },
 
     -- === CLASS BUFFS ===
-    { id=0, name="Power Word: Fortitude", icon="spell_holy_wordfortitude", bufficon={ "spell_holy_wordfortitude", "spell_holy_prayeroffortitude" } },
-    { id=0, name="Prayer of Fortitude", icon="spell_holy_prayeroffortitude",  bufficon={ "spell_holy_wordfortitude", "spell_holy_prayeroffortitude" } },
+    { id=0, name="Power Word: Fortitude", icon="spell_holy_wordfortitude", bufficon={ "spell_holy_wordfortitude", "spell_holy_prayeroffortitude" }, canAnnounce = true },
+    { id=0, name="Prayer of Fortitude", icon="spell_holy_prayeroffortitude",  bufficon={ "spell_holy_wordfortitude", "spell_holy_prayeroffortitude" }, canAnnounce = true },
 
-    { id=0, name="Divine Spirit", icon="spell_holy_divinespirit", bufficon={ "spell_holy_divinespirit", "spell_holy_prayerofspirit" } },
-    { id=0, name="Prayer of Spirit", icon="spell_holy_prayerofspirit",  bufficon={ "spell_holy_divinespirit", "spell_holy_prayerofspirit" } },
+    { id=0, name="Divine Spirit", icon="spell_holy_divinespirit", bufficon={ "spell_holy_divinespirit", "spell_holy_prayerofspirit" }, canAnnounce = true },
+    { id=0, name="Prayer of Spirit", icon="spell_holy_prayerofspirit",  bufficon={ "spell_holy_divinespirit", "spell_holy_prayerofspirit" }, canAnnounce = true },
 
-    { id=0, name="Shadow Protection", icon="spell_shadow_antishadow" },
-    { id=0, name="Prayer of Shadow Protection", icon="spell_holy_prayerofshadowprotection", bufficon="spell_shadow_antishadow" },
-    { id=0, name="Fear Ward", icon="spell_holy_excorcism" },
-    { id=0, name="Inner Fire", icon="spell_holy_innerfire" },
+    { id=0, name="Shadow Protection", icon="spell_shadow_antishadow", canAnnounce = true },
+    { id=0, name="Prayer of Shadow Protection", icon="spell_holy_prayerofshadowprotection", bufficon="spell_shadow_antishadow", canAnnounce = true },
+    { id=0, name="Fear Ward", icon="spell_holy_excorcism", canAnnounce = true },
+    { id=0, name="Inner Fire", icon="spell_holy_innerfire", canAnnounce = true },
     { id=0, name="Power Infusion", icon="spell_holy_powerinfusion" },
 
-    { id=0, name="Arcane Intellect", icon="spell_holy_magicalsentry" },
-    { id=0, name="Arcane Brilliance", icon="spell_holy_arcaneintellect", bufficon="spell_holy_magicalsentry" },
-    { id=0, name="Mage Armor", icon="spell_magearmor" },
-    { id=0, name="Ice Armor", icon="spell_frost_frostarmor02" },
-    { id=0, name="Molten Armor", icon="spell_fire_firearmor" },
-    { id=0, name="Amplify Magic", icon="spell_holy_flashheal" },
-    { id=0, name="Dampen Magic", icon="spell_nature_abolishmagic" },
+    { id=0, name="Arcane Intellect", icon="spell_holy_magicalsentry", canAnnounce = true },
+    { id=0, name="Arcane Brilliance", icon="spell_holy_arcaneintellect", bufficon="spell_holy_magicalsentry", canAnnounce = true },
+    { id=0, name="Mage Armor", icon="spell_magearmor", canAnnounce = true },
+    { id=0, name="Ice Armor", icon="spell_frost_frostarmor02", canAnnounce = true },
+    { id=0, name="Molten Armor", icon="spell_fire_firearmor", canAnnounce = true },
+    { id=0, name="Amplify Magic", icon="spell_holy_flashheal", canAnnounce = true },
+    { id=0, name="Dampen Magic", icon="spell_nature_abolishmagic", canAnnounce = true },
 
-    { id=0, name="Mark of the Wild", icon="spell_nature_regeneration" },
-    { id=0, name="Gift of the Wild", icon="spell_nature_regeneration", bufficon="spell_nature_regeneration" },
-    { id=0, name="Thorns", icon="spell_nature_thorns" },
+    { id=0, name="Mark of the Wild", icon="spell_nature_regeneration", canAnnounce = true },
+    { id=0, name="Gift of the Wild", icon="spell_nature_regeneration", bufficon="spell_nature_regeneration", canAnnounce = true },
+    { id=0, name="Thorns", icon="spell_nature_thorns", canAnnounce = true },
     { id=0, name="Omen of Clarity", icon="spell_nature_crystalball" },
     { id=0, name="Moonkin Aura", icon="spell_nature_starfall" },
     { id=0, name="Leader of the Pack", icon="spell_nature_unyeildingstamina" },
     { id=0, name="Emerald Blessing", icon="spell_nature_protectionformnature" },
 
-    { id=0, name="Blessing of Kings", icon="spell_magic_magearmor", bufficon={ "spell_magic_magearmor", "spell_magic_greaterblessingofkings" } },
-    { id=0, name="Greater Blessing of Kings", icon="spell_magic_greaterblessingofkings", bufficon={ "spell_magic_magearmor", "spell_magic_greaterblessingofkings" } },
+    { id=0, name="Blessing of Kings", icon="spell_magic_magearmor", bufficon={ "spell_magic_magearmor", "spell_magic_greaterblessingofkings" }, canAnnounce = true },
+    { id=0, name="Greater Blessing of Kings", icon="spell_magic_greaterblessingofkings", bufficon={ "spell_magic_magearmor", "spell_magic_greaterblessingofkings" }, canAnnounce = true },
     
-    { id=0, name="Blessing of Might", icon="spell_holy_fistofjustice", bufficon={ "spell_holy_fistofjustice", "spell_holy_greaterblessingofkings" } },
-    { id=0, name="Greater Blessing of Might", icon="spell_holy_fistofjustice", bufficon={ "spell_holy_fistofjustice", "spell_holy_greaterblessingofkings" } },
+    { id=0, name="Blessing of Might", icon="spell_holy_fistofjustice", bufficon={ "spell_holy_fistofjustice", "spell_holy_greaterblessingofkings" }, canAnnounce = true },
+    { id=0, name="Greater Blessing of Might", icon="spell_holy_fistofjustice", bufficon={ "spell_holy_fistofjustice", "spell_holy_greaterblessingofkings" }, canAnnounce = true },
     
-    { id=0, name="Blessing of Wisdom", icon="spell_holy_sealofwisdom", bufficon={ "spell_holy_sealofwisdom", "spell_holy_greaterblessingofwisdom" } },
-    { id=0, name="Greater Blessing of Wisdom", icon="spell_holy_greaterblessingofwisdom", bufficon={ "spell_holy_sealofwisdom", "spell_holy_greaterblessingofwisdom" } },
+    { id=0, name="Blessing of Wisdom", icon="spell_holy_sealofwisdom", bufficon={ "spell_holy_sealofwisdom", "spell_holy_greaterblessingofwisdom" }, canAnnounce = true },
+    { id=0, name="Greater Blessing of Wisdom", icon="spell_holy_greaterblessingofwisdom", bufficon={ "spell_holy_sealofwisdom", "spell_holy_greaterblessingofwisdom" }, canAnnounce = true },
     
-    { id=0, name="Blessing of Light", icon="spell_holy_prayerofhealing02", bufficon={ "spell_holy_prayerofhealing02", "spell_holy_greaterblessingoflight" } },
-    { id=0, name="Greater Blessing of Light", icon="spell_holy_greaterblessingoflight", bufficon={ "spell_holy_prayerofhealing02", "spell_holy_greaterblessingoflight" } },
+    { id=0, name="Blessing of Light", icon="spell_holy_prayerofhealing02", bufficon={ "spell_holy_prayerofhealing02", "spell_holy_greaterblessingoflight" }, canAnnounce = true },
+    { id=0, name="Greater Blessing of Light", icon="spell_holy_greaterblessingoflight", bufficon={ "spell_holy_prayerofhealing02", "spell_holy_greaterblessingoflight" }, canAnnounce = true },
     
-    { id=0, name="Blessing of Salvation", icon="spell_holy_sealofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation" } },
-    { id=0, name="Greater Blessing of Salvation", icon="spell_holy_greaterblessingofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation" } },
+    { id=0, name="Blessing of Salvation", icon="spell_holy_sealofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation" }, canAnnounce = true },
+    { id=0, name="Greater Blessing of Salvation", icon="spell_holy_greaterblessingofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation", canAnnounce = true } },
     
-    { id=0, name="Blessing of Sanctuary", icon="spell_nature_lightningshield", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary" } },
-    { id=0, name="Greater Blessing of Sanctuary", icon="spell_holy_greaterblessingofsanctuary", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary" } },
+    { id=0, name="Blessing of Sanctuary", icon="spell_nature_lightningshield", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary", canAnnounce = true } },
+    { id=0, name="Greater Blessing of Sanctuary", icon="spell_holy_greaterblessingofsanctuary", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary", canAnnounce = true } },
     
     { id=0, name="Devotion Aura", icon="spell_holy_devotionaura" },
     { id=0, name="Retribution Aura", icon="spell_holy_auraoflight" },
@@ -269,38 +269,38 @@ local MASTER_DB = {
     { id=0, name="Demon Skin", icon="spell_shadow_ragingscream" },
     { id=0, name="Demon Armor", icon="spell_shadow_ragingscream" },
     { id=0, name="Shadow Ward", icon="spell_shadow_antishadow" },
-    { id=0, name="Soulstone Resurrection", icon="spell_shadow_soulgem" },
-    { id=0, name="Detect Greater Invisibility", icon="spell_shadow_detectlesserinvisibility" },
-    { id=0, name="Unending Breath", icon="spell_shadow_demonbreath" },
+    { id=0, name="Soulstone Resurrection", icon="spell_shadow_soulgem", canAnnounce = true },
+    { id=0, name="Detect Greater Invisibility", icon="spell_shadow_detectlesserinvisibility", canAnnounce = true },
+    { id=0, name="Unending Breath", icon="spell_shadow_demonbreath", canAnnounce = true },
     { id=0, name="Demonic Sacrifice", icon="spell_shadow_psychicscream"},   
 
-    { id=0, name="Battle Shout", icon="ability_warrior_battleshout" },
+    { id=0, name="Battle Shout", icon="ability_warrior_battleshout", canAnnounce = true },
     { id=0, name="Berserker Rage", icon="spell_nature_ancestralguardian" },
     { id=0, name="Bloodrage", icon="ability_racial_bloodrage" },
 
-    { id=0, name="Trueshot Aura", icon="ability_trueshot" },
-    { id=0, name="Aspect of the Hawk", icon="spell_nature_ravenform" },
-    { id=0, name="Aspect of the Monkey", icon="ability_hunter_aspectofthemonkey" },
-    { id=0, name="Aspect of the Cheetah", icon="ability_mount_junglecat" },
-    { id=0, name="Aspect of the Pack", icon="ability_mount_whitetiger" },
-    { id=0, name="Aspect of the Wild", icon="spell_nature_protectionformnature" },
+    { id=0, name="Trueshot Aura", icon="ability_trueshot", canAnnounce = true },
+    { id=0, name="Aspect of the Hawk", icon="spell_nature_ravenform", canAnnounce = true },
+    { id=0, name="Aspect of the Monkey", icon="ability_hunter_aspectofthemonkey", canAnnounce = true },
+    { id=0, name="Aspect of the Cheetah", icon="ability_mount_junglecat", canAnnounce = true },
+    { id=0, name="Aspect of the Pack", icon="ability_mount_whitetiger", canAnnounce = true },
+    { id=0, name="Aspect of the Wild", icon="spell_nature_protectionformnature", canAnnounce = true },
 
-    { id=0, name="Strength of Earth Totem", icon="spell_nature_earthbindtotem" },
-    { id=0, name="Stoneskin Totem", icon="spell_nature_stoneskintotem" },
-    { id=0, name="Tremor Totem", icon="spell_nature_tremortotem" },
-    { id=0, name="Earthbind Totem", icon="spell_nature_strengthofearthtotem02" },
-    { id=0, name="Grace of Air Totem", icon="spell_nature_invisibilitytotem" },
-    { id=0, name="Windfury Totem", icon="spell_nature_windfury" },
-    { id=0, name="Mana Spring Totem", icon="spell_nature_manaregentotem" },
-    { id=0, name="Healing Stream Totem", icon="inv_spear_04" },
-    { id=0, name="Fire Resistance Totem", icon="spell_fireresistancetotem_01" },
-    { id=0, name="Frost Resistance Totem", icon="spell_frostresistancetotem_01" },
-    { id=0, name="Nature Resistance Totem", icon="spell_nature_natureresistancetotem" },
-    { id=0, name="Magma Totem", icon="spell_fire_selfdestruct" },
-    { id=0, name="Searing Totem", icon="spell_fire_searingtotem" },
-    { id=0, name="Tranquil Air Totem", icon="spell_nature_brilliance" },
-    { id=0, name="Poison Cleansing Totem", icon="spell_nature_poisoncleansingtotes" },
-    { id=0, name="Disease Cleansing Totem", icon="spell_nature_diseasecleansingtotes" },
+    { id=0, name="Strength of Earth Totem", icon="spell_nature_earthbindtotem", canAnnounce = true },
+    { id=0, name="Stoneskin Totem", icon="spell_nature_stoneskintotem", canAnnounce = true },
+    { id=0, name="Tremor Totem", icon="spell_nature_tremortotem", canAnnounce = true },
+    { id=0, name="Earthbind Totem", icon="spell_nature_strengthofearthtotem02", canAnnounce = true },
+    { id=0, name="Grace of Air Totem", icon="spell_nature_invisibilitytotem", canAnnounce = true },
+    { id=0, name="Windfury Totem", icon="spell_nature_windfury", canAnnounce = true },
+    { id=0, name="Mana Spring Totem", icon="spell_nature_manaregentotem", canAnnounce = true },
+    { id=0, name="Healing Stream Totem", icon="inv_spear_04", canAnnounce = true },
+    { id=0, name="Fire Resistance Totem", icon="spell_fireresistancetotem_01", canAnnounce = true },
+    { id=0, name="Frost Resistance Totem", icon="spell_frostresistancetotem_01", canAnnounce = true },
+    { id=0, name="Nature Resistance Totem", icon="spell_nature_natureresistancetotem", canAnnounce = true },
+    { id=0, name="Magma Totem", icon="spell_fire_selfdestruct", canAnnounce = true },
+    { id=0, name="Searing Totem", icon="spell_fire_searingtotem", canAnnounce = true },
+    { id=0, name="Tranquil Air Totem", icon="spell_nature_brilliance", canAnnounce = true },
+    { id=0, name="Poison Cleansing Totem", icon="spell_nature_poisoncleansingtotes", canAnnounce = true },
+    { id=0, name="Disease Cleansing Totem", icon="spell_nature_diseasecleansingtotes", canAnnounce = true },
 
     -- === LEGENDARY AURAS ===
     { id=0, name="Atiesh (Mage)", icon="spell_nature_moonglow", checkTooltip="critical" },
@@ -563,6 +563,70 @@ local function UseItemOrSpell(dbEntry)
     end
 
     -- 5. CAST SPELL (Fallback)
+    CastSpellByName(cleanName)
+end
+
+local function UseItemOrSpell(dbEntry)
+    local isActive = GetBuffStatus(dbEntry)
+    local wbActive = GetWeaponBuffStatus(dbEntry)
+    
+    if isActive or wbActive then
+        UIErrorsFrame:AddMessage("Buff is already active!", 1.0, 0.1, 0.1, 1.0, 3)
+        return
+    end
+
+    if IsControlKeyDown() and dbEntry.canAnnounce then
+        local buffName = dbEntry.name
+        local playerClass = UnitClass("player")
+        local playerName = UnitName("player")
+        
+        DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00Requesting buff: " .. buffName .. "|r")
+
+        if GetNumRaidMembers() > 0 then
+            for i = 1, GetNumRaidMembers() do
+                local name, _, subgroup = GetRaidRosterInfo(i)
+                if name == playerName then
+                    SendChatMessage("Missing " .. buffName .. " on " .. playerClass .. " in Group " .. subgroup, "RAID")
+                    return
+                end
+            end
+        elseif GetNumPartyMembers() > 0 then
+            SendChatMessage("Missing " .. buffName .. " on " .. playerClass, "PARTY")
+            return
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Not in a group to request buffs.|r")
+        end
+        return
+    end
+
+    local name = dbEntry.name
+    local id = dbEntry.id
+
+    local cleanName = name
+    cleanName = string.gsub(cleanName, " %(MH%)", "")
+    cleanName = string.gsub(cleanName, " %(OH%)", "")
+
+    if string.find(cleanName, "Flask") then
+        local dialog = StaticPopup_Show("Consumables_CONFIRM_FLASK", cleanName)
+        if dialog then dialog.data = cleanName end
+        return
+    end
+
+    if id and id ~= 0 then
+        for bag = 0, 4 do
+            for slot = 1, GetContainerNumSlots(bag) do
+                local link = GetContainerItemLink(bag, slot)
+                if link then
+                    local _, _, itemID = string.find(link, "item:(%d+):")
+                    if itemID and tonumber(itemID) == id then 
+                        UseContainerItem(bag, slot)
+                        return 
+                    end
+                end
+            end
+        end
+    end
+
     CastSpellByName(cleanName)
 end
 
@@ -1660,7 +1724,7 @@ eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
 eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 
 eventFrame:SetScript("OnEvent", function()
-if event == "VARIABLES_LOADED" then
+    if event == "VARIABLES_LOADED" then
         if not ConsumablesDB then
             ConsumablesDB = {
                 settings = {
@@ -1680,10 +1744,19 @@ if event == "VARIABLES_LOADED" then
         UPDATE_QUEUED = true
     elseif event == "UNIT_AURA" then
         if arg1 == "player" then UPDATE_QUEUED = true end
+    elseif event == "BAG_UPDATE" or event == "RAID_ROSTER_UPDATE" or event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_REGEN_ENABLED" then
+        UPDATE_QUEUED = true
     end
 end)
 
 eventFrame:SetScript("OnUpdate", function()
+    local hasMain, _, _, hasOff, _, _ = GetWeaponEnchantInfo()
+    if hasMain ~= LAST_MH_STATE or hasOff ~= LAST_OH_STATE then
+        LAST_MH_STATE = hasMain
+        LAST_OH_STATE = hasOff
+        UPDATE_QUEUED = true
+    end
+
     if UPDATE_QUEUED then
         local now = GetTime()
         if (now - LAST_UPDATE_TIME) > 0.5 then
