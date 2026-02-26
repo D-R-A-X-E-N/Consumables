@@ -1460,20 +1460,26 @@ local function CreateConfigWindow()
 
     local showCheck = CreateFrame("CheckButton", "ConsumablesShowCheck", settingsTab, "OptionsCheckButtonTemplate");
     showCheck:SetPoint("TOPLEFT", 20, -60); getglobal("ConsumablesShowCheckText"):SetText("Enable")
+    showCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
     showCheck:SetChecked(not ConsumablesDB.settings.hidden)
     showCheck:SetScript("OnClick", function() ConsumablesDB.settings.hidden = not this:GetChecked(); UPDATE_QUEUED = true end)
 
-    local mouseoverCheck = CreateFrame("CheckButton", "ConsumablesMouseoverCheck", settingsTab, "OptionsCheckButtonTemplate");
-    mouseoverCheck:SetPoint("TOPLEFT", 220, -60); 
-    getglobal("ConsumablesMouseoverCheckText"):SetText("Show on Mouseover")
-    mouseoverCheck:SetChecked(ConsumablesDB.settings.mouseover)
-    mouseoverCheck:SetScript("OnClick", function() 
-        ConsumablesDB.settings.mouseover = this:GetChecked()
-        UPDATE_QUEUED = true 
+    local mmUnlockCheck = CreateFrame("CheckButton", "ConsumablesMMUnlockCheck", settingsTab, "OptionsCheckButtonTemplate");
+    mmUnlockCheck:SetPoint("TOPLEFT", 220, -60); 
+    mmUnlockCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesMMUnlockCheckText"):SetText("Detach Minimap Button")
+    mmUnlockCheck:SetChecked(ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.unlocked)
+    mmUnlockCheck:SetScript("OnClick", function() 
+        if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
+        ConsumablesDB.settings.minimap.unlocked = (this:GetChecked() == 1)
+        if Cons_MinimapButton and Cons_MinimapButton.UpdatePosition then
+            Cons_MinimapButton.UpdatePosition()
+        end
     end)
 
     local bgCheck = CreateFrame("CheckButton", "ConsumablesBgCheck", settingsTab, "OptionsCheckButtonTemplate");
     bgCheck:SetPoint("TOPLEFT", 20, -90); 
+    bgCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
     getglobal("ConsumablesBgCheckText"):SetText("Show Background")
     bgCheck:SetChecked(ConsumablesDB.settings.showBackground)
     bgCheck:SetScript("OnClick", function() 
@@ -1483,6 +1489,7 @@ local function CreateConfigWindow()
 
     local titleCheck = CreateFrame("CheckButton", "ConsumablesTitleCheck", settingsTab, "OptionsCheckButtonTemplate");
     titleCheck:SetPoint("TOPLEFT", 220, -90); 
+    titleCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
     getglobal("ConsumablesTitleCheckText"):SetText("Show Group Titles")
     titleCheck:SetChecked(ConsumablesDB.settings.showTitles)
     titleCheck:SetScript("OnClick", function() 
@@ -1490,43 +1497,31 @@ local function CreateConfigWindow()
         UPDATE_QUEUED = true 
     end)
 
-    local sizeSlider = CreateFrame("Slider", "ConsumablesSizeSlider", settingsTab, "OptionsSliderTemplate"); sizeSlider:SetWidth(180); sizeSlider:SetHeight(16);
-    sizeSlider:SetPoint("TOPLEFT", 20, -130); sizeSlider:SetMinMaxValues(16, 64); sizeSlider:SetValueStep(2); sizeSlider:SetValue(ConsumablesDB.settings.iconSize)
-    getglobal("ConsumablesSizeSliderText"):SetText("Icon Size: " .. ConsumablesDB.settings.iconSize); getglobal("ConsumablesSizeSliderLow"):SetText("16"); getglobal("ConsumablesSizeSliderHigh"):SetText("64")
-    sizeSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.iconSize = math.floor(this:GetValue()); getglobal("ConsumablesSizeSliderText"):SetText("Icon Size: " .. ConsumablesDB.settings.iconSize); UPDATE_QUEUED = true end)
-
-    local spaceSlider = CreateFrame("Slider", "ConsumablesSpaceSlider", settingsTab, "OptionsSliderTemplate"); spaceSlider:SetWidth(180); spaceSlider:SetHeight(16);
-    spaceSlider:SetPoint("TOPLEFT", 20, -170); spaceSlider:SetMinMaxValues(0, 20); spaceSlider:SetValueStep(1); spaceSlider:SetValue(ConsumablesDB.settings.spacing)
-    getglobal("ConsumablesSpaceSliderText"):SetText("Spacing: " .. ConsumablesDB.settings.spacing); getglobal("ConsumablesSpaceSliderLow"):SetText("0"); getglobal("ConsumablesSpaceSliderHigh"):SetText("20")
-    spaceSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.spacing = math.floor(this:GetValue()); getglobal("ConsumablesSpaceSliderText"):SetText("Spacing: " .. ConsumablesDB.settings.spacing); UPDATE_QUEUED = true end)
-
-    local catSpaceSlider = CreateFrame("Slider", "ConsumablesCatSpaceSlider", settingsTab, "OptionsSliderTemplate"); catSpaceSlider:SetWidth(180); catSpaceSlider:SetHeight(16);
-    catSpaceSlider:SetPoint("TOPLEFT", 20, -210); catSpaceSlider:SetMinMaxValues(0, 50); catSpaceSlider:SetValueStep(2); catSpaceSlider:SetValue(ConsumablesDB.settings.catSpacing or 20)
-    getglobal("ConsumablesCatSpaceSliderText"):SetText("Group Vertical Gap: " .. (ConsumablesDB.settings.catSpacing or 20)); getglobal("ConsumablesCatSpaceSliderLow"):SetText("0"); getglobal("ConsumablesCatSpaceSliderHigh"):SetText("50")
-    catSpaceSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.catSpacing = math.floor(this:GetValue()); getglobal("ConsumablesCatSpaceSliderText"):SetText("Group Vertical Gap: " .. ConsumablesDB.settings.catSpacing); UPDATE_QUEUED = true end)
-
-    local colSlider = CreateFrame("Slider", "ConsumablesColSlider", settingsTab, "OptionsSliderTemplate"); colSlider:SetWidth(180); colSlider:SetHeight(16);
-    colSlider:SetPoint("TOPLEFT", 20, -250); colSlider:SetMinMaxValues(1, 20); colSlider:SetValueStep(1); colSlider:SetValue(ConsumablesDB.settings.columns or 10)
-    getglobal("ConsumablesColSliderText"):SetText("Max Columns: " .. (ConsumablesDB.settings.columns or 10)); getglobal("ConsumablesColSliderLow"):SetText("1"); getglobal("ConsumablesColSliderHigh"):SetText("20")
-    colSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.columns = math.floor(this:GetValue()); getglobal("ConsumablesColSliderText"):SetText("Max Columns: " .. ConsumablesDB.settings.columns); UPDATE_QUEUED = true end)
-
     local combatCheck = CreateFrame("CheckButton", "ConsumablesCombatCheck", settingsTab, "OptionsCheckButtonTemplate");
-    combatCheck:SetPoint("TOPLEFT", 20, -290); getglobal("ConsumablesCombatCheckText"):SetText("Hide in Combat")
+    combatCheck:SetPoint("TOPLEFT", 20, -120); 
+    combatCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesCombatCheckText"):SetText("Hide in Combat")
     combatCheck:SetChecked(ConsumablesDB.settings.hideCombat)
     combatCheck:SetScript("OnClick", function() ConsumablesDB.settings.hideCombat = this:GetChecked(); UPDATE_QUEUED = true end)
 
     local raidCheck = CreateFrame("CheckButton", "ConsumablesRaidCheck", settingsTab, "OptionsCheckButtonTemplate");
-    raidCheck:SetPoint("TOPLEFT", 20, -320); getglobal("ConsumablesRaidCheckText"):SetText("Only Show in Raid")
+    raidCheck:SetPoint("TOPLEFT", 220, -120); 
+    raidCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesRaidCheckText"):SetText("Only Show in Raid")
     raidCheck:SetChecked(ConsumablesDB.settings.onlyRaid)
     raidCheck:SetScript("OnClick", function() ConsumablesDB.settings.onlyRaid = this:GetChecked(); UPDATE_QUEUED = true end)
 
     local activeCheck = CreateFrame("CheckButton", "ConsumablesActiveCheck", settingsTab, "OptionsCheckButtonTemplate");
-    activeCheck:SetPoint("TOPLEFT", 20, -350); getglobal("ConsumablesActiveCheckText"):SetText("Hide Active Buffs")
+    activeCheck:SetPoint("TOPLEFT", 20, -150); 
+    activeCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesActiveCheckText"):SetText("Hide Active Buffs")
     activeCheck:SetChecked(ConsumablesDB.settings.hideActive)
-    activeCheck:SetScript("OnClick", function() ConsumablesDB.settings.hideActive = this:GetChecked(); UPDATE_QUEUED = true end)
+    activeCheck:SetScript("OnClick", function() ConsumablesDB.settings.hideActive = (this:GetChecked() == 1); UPDATE_QUEUED = true end)
     
     local independentCheck = CreateFrame("CheckButton", "ConsumablesIndependentCheck", settingsTab, "OptionsCheckButtonTemplate");
-    independentCheck:SetPoint("TOPLEFT", 20, -380); getglobal("ConsumablesIndependentCheckText"):SetText("Detach Groups (Move Independently)")
+    independentCheck:SetPoint("TOPLEFT", 220, -150); 
+    independentCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesIndependentCheckText"):SetText("Detach Groups")
     independentCheck:SetChecked(ConsumablesDB.settings.independent)
     independentCheck:SetScript("OnClick", function() 
         local isIndep = this:GetChecked()
@@ -1534,8 +1529,9 @@ local function CreateConfigWindow()
         UPDATE_QUEUED = true 
     end)
     
-local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "OptionsCheckButtonTemplate");
-    mmCheck:SetPoint("TOPLEFT", 20, -410); 
+    local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "OptionsCheckButtonTemplate");
+    mmCheck:SetPoint("TOPLEFT", 20, -180); 
+    mmCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
     getglobal("ConsumablesMMCheckText"):SetText("Show Minimap Button")
     mmCheck:SetChecked(not (ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.hide))
     mmCheck:SetScript("OnClick", function() 
@@ -1544,17 +1540,35 @@ local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "O
         UpdateMinimapButton()
     end)
 
-    local mmUnlockCheck = CreateFrame("CheckButton", "ConsumablesMMUnlockCheck", settingsTab, "OptionsCheckButtonTemplate");
-    mmUnlockCheck:SetPoint("TOPLEFT", 220, -410); 
-    getglobal("ConsumablesMMUnlockCheckText"):SetText("Detach Minimap Button")
-    mmUnlockCheck:SetChecked(ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.unlocked)
-    mmUnlockCheck:SetScript("OnClick", function() 
-        if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
-        ConsumablesDB.settings.minimap.unlocked = this:GetChecked()
-        if Cons_MinimapButton and Cons_MinimapButton.UpdatePosition then
-            Cons_MinimapButton.UpdatePosition()
-        end
+    local mouseoverCheck = CreateFrame("CheckButton", "ConsumablesMouseoverCheck", settingsTab, "OptionsCheckButtonTemplate");
+    mouseoverCheck:SetPoint("TOPLEFT", 220, -180); 
+    mouseoverCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesMouseoverCheckText"):SetText("Show on Mouseover")
+    mouseoverCheck:SetChecked(ConsumablesDB.settings.mouseover)
+    mouseoverCheck:SetScript("OnClick", function() 
+        ConsumablesDB.settings.mouseover = this:GetChecked()
+        UPDATE_QUEUED = true 
     end)
+
+    local sizeSlider = CreateFrame("Slider", "ConsumablesSizeSlider", settingsTab, "OptionsSliderTemplate"); sizeSlider:SetWidth(180); sizeSlider:SetHeight(16);
+    sizeSlider:SetPoint("TOPLEFT", 20, -230); sizeSlider:SetMinMaxValues(16, 64); sizeSlider:SetValueStep(2); sizeSlider:SetValue(ConsumablesDB.settings.iconSize)
+    getglobal("ConsumablesSizeSliderText"):SetText("Icon Size: " .. ConsumablesDB.settings.iconSize); getglobal("ConsumablesSizeSliderLow"):SetText("16"); getglobal("ConsumablesSizeSliderHigh"):SetText("64")
+    sizeSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.iconSize = math.floor(this:GetValue()); getglobal("ConsumablesSizeSliderText"):SetText("Icon Size: " .. ConsumablesDB.settings.iconSize); UPDATE_QUEUED = true end)
+
+    local spaceSlider = CreateFrame("Slider", "ConsumablesSpaceSlider", settingsTab, "OptionsSliderTemplate"); spaceSlider:SetWidth(180); spaceSlider:SetHeight(16);
+    spaceSlider:SetPoint("TOPLEFT", 20, -270); spaceSlider:SetMinMaxValues(0, 20); spaceSlider:SetValueStep(1); spaceSlider:SetValue(ConsumablesDB.settings.spacing)
+    getglobal("ConsumablesSpaceSliderText"):SetText("Spacing: " .. ConsumablesDB.settings.spacing); getglobal("ConsumablesSpaceSliderLow"):SetText("0"); getglobal("ConsumablesSpaceSliderHigh"):SetText("20")
+    spaceSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.spacing = math.floor(this:GetValue()); getglobal("ConsumablesSpaceSliderText"):SetText("Spacing: " .. ConsumablesDB.settings.spacing); UPDATE_QUEUED = true end)
+
+    local catSpaceSlider = CreateFrame("Slider", "ConsumablesCatSpaceSlider", settingsTab, "OptionsSliderTemplate"); catSpaceSlider:SetWidth(180); catSpaceSlider:SetHeight(16);
+    catSpaceSlider:SetPoint("TOPLEFT", 20, -310); catSpaceSlider:SetMinMaxValues(0, 50); catSpaceSlider:SetValueStep(2); catSpaceSlider:SetValue(ConsumablesDB.settings.catSpacing or 20)
+    getglobal("ConsumablesCatSpaceSliderText"):SetText("Group Vertical Gap: " .. (ConsumablesDB.settings.catSpacing or 20)); getglobal("ConsumablesCatSpaceSliderLow"):SetText("0"); getglobal("ConsumablesCatSpaceSliderHigh"):SetText("50")
+    catSpaceSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.catSpacing = math.floor(this:GetValue()); getglobal("ConsumablesCatSpaceSliderText"):SetText("Group Vertical Gap: " .. ConsumablesDB.settings.catSpacing); UPDATE_QUEUED = true end)
+
+    local colSlider = CreateFrame("Slider", "ConsumablesColSlider", settingsTab, "OptionsSliderTemplate"); colSlider:SetWidth(180); colSlider:SetHeight(16);
+    colSlider:SetPoint("TOPLEFT", 20, -350); colSlider:SetMinMaxValues(1, 20); colSlider:SetValueStep(1); colSlider:SetValue(ConsumablesDB.settings.columns or 10)
+    getglobal("ConsumablesColSliderText"):SetText("Max Columns: " .. (ConsumablesDB.settings.columns or 10)); getglobal("ConsumablesColSliderLow"):SetText("1"); getglobal("ConsumablesColSliderHigh"):SetText("20")
+    colSlider:SetScript("OnValueChanged", function() ConsumablesDB.settings.columns = math.floor(this:GetValue()); getglobal("ConsumablesColSliderText"):SetText("Max Columns: " .. ConsumablesDB.settings.columns); UPDATE_QUEUED = true end)
 
     local controlsFrame = CreateFrame("Frame", nil, settingsTab)
     controlsFrame:SetWidth(200); controlsFrame:SetHeight(300)
@@ -1576,11 +1590,10 @@ local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "O
 
     local creditText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     creditText:SetPoint("BOTTOMRIGHT", -15, 15)
-    creditText:SetText("|cffff5555Made by Draxen|r")
+    creditText:SetText("|cffff5555Made by Draxen, with love.|r")
 
     CONFIG_FRAME = f; RefreshGroupList(catContent, buffContent, catNameBox); RefreshBuffList(buffContent); return f
 end
-
 
 function Consumables_ToggleEnable()
     if not ConsumablesDB then return end
