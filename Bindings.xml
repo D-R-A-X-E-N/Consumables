@@ -3,25 +3,3 @@
         Consumables_ToggleEnable();
     </Binding>
 </Bindings>
-
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-    <Model name="CooldownFrameTemplate" virtual="true">
-        <Size>
-            <AbsDimension x="36" y="36"/>
-        </Size>
-        <Frames>
-            <Frame name="$parentTextFrame" setAllPoints="true">
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentText" inherits="GameFontNormal" justifyH="CENTER"/>
-                    </Layer>
-                </Layers>
-            </Frame>
-        </Frames>
-        <Scripts>
-            <OnLoad>
-                this:SetModel("Interface\\Cooldown\\Empty.mdx");
-            </OnLoad>
-        </Scripts>
-    </Model>
-</Ui>
