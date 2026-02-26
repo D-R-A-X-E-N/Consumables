@@ -1515,6 +1515,7 @@ local function CreateConfigWindow()
         end
     end)
 
+    -- SETTINGS TAB
     local showCheck = CreateFrame("CheckButton", "ConsumablesShowCheck", settingsTab, "OptionsCheckButtonTemplate");
     showCheck:SetPoint("TOPLEFT", 20, -60); getglobal("ConsumablesShowCheckText"):SetText("Enable")
     showCheck:SetChecked(not ConsumablesDB.settings.hidden)
@@ -1534,7 +1535,7 @@ local function CreateConfigWindow()
     getglobal("ConsumablesBgCheckText"):SetText("Show Background")
     bgCheck:SetChecked(ConsumablesDB.settings.showBackground)
     bgCheck:SetScript("OnClick", function() 
-        ConsumablesDB.settings.showBackground = (this:GetChecked() == 1)
+        ConsumablesDB.settings.showBackground = (this:GetChecked() == 1) 
         UPDATE_QUEUED = true 
     end)
 
@@ -1591,6 +1592,19 @@ local function CreateConfigWindow()
         UpdateMinimapButton()
     end)
 
+    local mmUnlockCheck = CreateFrame("CheckButton", "ConsumablesMMUnlockCheck", settingsTab, "OptionsCheckButtonTemplate");
+    mmUnlockCheck:SetPoint("TOPLEFT", 220, -410); 
+    getglobal("ConsumablesMMUnlockCheckText"):SetText("Detach Minimap Button")
+    mmUnlockCheck:SetChecked(ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.unlocked)
+    mmUnlockCheck:SetScript("OnClick", function() 
+        if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
+        ConsumablesDB.settings.minimap.unlocked = this:GetChecked()
+        if Cons_MinimapButton and Cons_MinimapButton.UpdatePosition then
+            Cons_MinimapButton.UpdatePosition()
+        end
+    end)
+
+    -- CONTROLS REFERENCE (Right Side)
     local controlsFrame = CreateFrame("Frame", nil, settingsTab)
     controlsFrame:SetWidth(200); controlsFrame:SetHeight(300)
     controlsFrame:SetPoint("TOPRIGHT", -20, -60)
@@ -1604,9 +1618,12 @@ local function CreateConfigWindow()
     ctrlText:SetJustifyH("LEFT")
     ctrlText:SetWidth(200)
     ctrlText:SetText("|cffffffffClick Icon:|r Use Item/Cast Spell\n\n" ..
-                     "|cffffffffAlt + Left Drag:|r Move Main Frame (or Group)\n\n" ..
-                     "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n")
+                     "|cffffffffCtrl + Click Icon:|r Request Buff in chat\n\n" ..
+                     "|cffffffffAlt + Left Drag:|r Move Frame (or Group)\n\n" ..
+                     "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n" ..
+                     "|cffffffffRight Click Minimap Icon:|r Drag Button")
 
+    -- FOOTER CREDIT
     local creditText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     creditText:SetPoint("BOTTOMRIGHT", -15, 15)
     creditText:SetText("|cffff5555Made by Draxen|r")
@@ -1688,6 +1705,7 @@ local function CreateMinimapButton()
     miniMapBtn:SetWidth(33); miniMapBtn:SetHeight(33)
     miniMapBtn:SetFrameStrata("MEDIUM"); miniMapBtn:SetFrameLevel(8)
     miniMapBtn:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+    miniMapBtn:SetMovable(true)
 
     if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
     if not ConsumablesDB.settings.minimap.angle then ConsumablesDB.settings.minimap.angle = 225 end
@@ -1704,33 +1722,53 @@ local function CreateMinimapButton()
     miniMapBtn.border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
 
     local function UpdateMinimapButtonPosition()
-        local angle = ConsumablesDB.settings.minimap.angle
-        local radius = 80
-        local x = radius * math.cos(math.rad(angle))
-        local y = radius * math.sin(math.rad(angle))
         miniMapBtn:ClearAllPoints()
-        miniMapBtn:SetPoint("CENTER", Minimap, "CENTER", x, y)
+        if ConsumablesDB.settings.minimap.unlocked then
+            miniMapBtn:SetParent(UIParent)
+            local p = ConsumablesDB.settings.minimap.pos
+            if p then
+                miniMapBtn:SetPoint(p.point, UIParent, p.relativePoint, p.x, p.y)
+            else
+                miniMapBtn:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+            end
+        else
+            miniMapBtn:SetParent(Minimap)
+            local angle = ConsumablesDB.settings.minimap.angle
+            local radius = 80
+            local x = radius * math.cos(math.rad(angle))
+            local y = radius * math.sin(math.rad(angle))
+            miniMapBtn:SetPoint("CENTER", Minimap, "CENTER", x, y)
+        end
     end
 
     miniMapBtn:RegisterForDrag("RightButton")
     miniMapBtn:RegisterForClicks("LeftButtonUp")
 
     miniMapBtn:SetScript("OnDragStart", function()
-        this:SetScript("OnUpdate", function()
-            local mx, my = GetCursorPosition()
-            local px, py = Minimap:GetCenter()
-            local scale = Minimap:GetEffectiveScale()
-            mx, my = mx / scale, my / scale
-            local dx, dy = mx - px, my - py
-            local angle = math.deg(math.atan2(dy, dx))
-            if angle < 0 then angle = angle + 360 end
-            ConsumablesDB.settings.minimap.angle = angle
-            UpdateMinimapButtonPosition()
-        end)
+        if ConsumablesDB.settings.minimap.unlocked then
+            this:StartMoving()
+        else
+            this:SetScript("OnUpdate", function()
+                local mx, my = GetCursorPosition()
+                local px, py = Minimap:GetCenter()
+                local scale = Minimap:GetEffectiveScale()
+                mx, my = mx / scale, my / scale
+                local dx, dy = mx - px, my - py
+                local angle = math.deg(math.atan2(dy, dx))
+                if angle < 0 then angle = angle + 360 end
+                ConsumablesDB.settings.minimap.angle = angle
+                UpdateMinimapButtonPosition()
+            end)
+        end
     end)
 
     miniMapBtn:SetScript("OnDragStop", function()
+        this:StopMovingOrSizing()
         this:SetScript("OnUpdate", nil)
+        if ConsumablesDB.settings.minimap.unlocked then
+            local point, _, relativePoint, x, y = this:GetPoint()
+            ConsumablesDB.settings.minimap.pos = { point = point, relativePoint = relativePoint, x = x, y = y }
+        end
     end)
 
     miniMapBtn:SetScript("OnClick", function()
@@ -1748,6 +1786,7 @@ local function CreateMinimapButton()
     end)
     miniMapBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
+    miniMapBtn.UpdatePosition = UpdateMinimapButtonPosition
     UpdateMinimapButtonPosition()
     UpdateMinimapButton()
 end
@@ -1768,7 +1807,7 @@ eventFrame:SetScript("OnEvent", function()
                 settings = {
                     iconSize = 32, spacing = 4, catSpacing = 20, columns=10, alignRight=false,
                     hideCombat=false, hidden=false, onlyRaid=false, hideActive=false, independent=false,
-                    showBackground=true, mouseover=false, minimap={ hide=false, angle=45 }
+                    showBackground=true, mouseover=false, minimap={ hide=false, angle=45, unlocked=false }
                 },
                 categories = { { name="Consumables", buffs={} } }
             }
@@ -1779,7 +1818,8 @@ eventFrame:SetScript("OnEvent", function()
         end
         if ConsumablesDB.settings.independent == nil then ConsumablesDB.settings.independent = false end
         if ConsumablesDB.settings.mouseover == nil then ConsumablesDB.settings.mouseover = false end
-        if ConsumablesDB.settings.minimap == nil then ConsumablesDB.settings.minimap = { hide=false, angle=45 } end
+        if ConsumablesDB.settings.minimap == nil then ConsumablesDB.settings.minimap = { hide=false, angle=45, unlocked=false } end
+        if ConsumablesDB.settings.minimap.unlocked == nil then ConsumablesDB.settings.minimap.unlocked = false end
         
         CreateMinimapButton()
         UPDATE_QUEUED = true
