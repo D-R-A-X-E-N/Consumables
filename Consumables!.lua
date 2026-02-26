@@ -718,7 +718,6 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
     local alignRight = isRightAligned 
     local independent = settings.independent
 
-    -- Hide unused icons from previous renders
     local j = 1
     while getglobal(frame:GetName() .. "_Icon_" .. j) do
         getglobal(frame:GetName() .. "_Icon_" .. j):Hide()
@@ -777,6 +776,44 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
                 end
                 t:SetTexture("Interface\\Icons\\" .. buff.icon)
 
+                local cd = getglobal(iconF:GetName().."_CD")
+                if not cd then
+                    cd = CreateFrame("Model", iconF:GetName().."_CD", iconF, "CooldownFrameTemplate")
+                    cd:SetAllPoints(iconF)
+                end
+
+                local start, duration = 0, 0
+                if buff.id and buff.id ~= 0 then
+                    for bag = 0, 4 do
+                        for slot = 1, GetContainerNumSlots(bag) do
+                            local link = GetContainerItemLink(bag, slot)
+                            if link and string.find(link, "item:"..buff.id..":") then
+                                start, duration = GetContainerItemCooldown(bag, slot)
+                                break
+                            end
+                        end
+                        if start > 0 then break end
+                    end
+                else
+                    local spellName = buff.name
+                    local i = 1
+                    while true do
+                        local name = GetSpellName(i, "BOOKTYPE_SPELL")
+                        if not name then break end
+                        if name == spellName then
+                            start, duration = GetSpellCooldown(i, "BOOKTYPE_SPELL")
+                            break
+                        end
+                        i = i + 1
+                    end
+                end
+
+                if cd and start and duration then
+                    CooldownFrame_SetTimer(cd, start, duration, 1)
+                elseif cd then
+                    cd:Hide()
+                end
+
                 local countText = getglobal(iconF:GetName().."_Count")
                 if not countText then 
                     countText = iconF:CreateFontString(iconF:GetName().."_Count", "OVERLAY")
@@ -810,7 +847,6 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
                     t:SetVertexColor(0.5, 0.1, 0.1) 
                 end
 
-                -- SCRIPTS
                 iconF.buffData = buff
                 iconF:SetScript("OnEnter", function() 
                     if frame:GetAlpha() > 0.1 then
