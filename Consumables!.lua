@@ -519,34 +519,49 @@ local function FindInDB(text)
 end
 
 local function UseItemOrSpell(dbEntry)
-    -- 1. CHECK ACTIVE STATUS
-    -- If the buff or weapon enchant is already present, block the action.
     local isActive = GetBuffStatus(dbEntry)
     local wbActive = GetWeaponBuffStatus(dbEntry)
     
     if isActive or wbActive then
-        -- Displays red error text in the middle of the screen
         UIErrorsFrame:AddMessage("Buff is already active!", 1.0, 0.1, 0.1, 1.0, 3)
         return
     end
 
-    -- 2. PREPARE DATA
+    if IsControlKeyDown() and dbEntry.canAnnounce then
+        local buffName = dbEntry.name
+        local playerClass = UnitClass("player")
+        local playerName = UnitName("player")
+        
+        DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00Requesting buff: " .. buffName .. "|r")
+
+        if GetNumRaidMembers() > 0 then
+            for i = 1, GetNumRaidMembers() do
+                local name, _, subgroup = GetRaidRosterInfo(i)
+                if name == playerName then
+                    SendChatMessage(">> MISSING [" .. buffName .. "] << G" .. subgroup .. " (" .. playerClass .. ")", "RAID")
+                    return
+                end
+            end
+        elseif GetNumPartyMembers() > 0 then
+            SendChatMessage(">> MISSING [" .. buffName .. "] << (" .. playerClass .. ")", "PARTY")
+            return
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Not in a group to request buffs.|r")
+        end
+        return
+    end
+
     local name = dbEntry.name
     local id = dbEntry.id
-
-    -- Clean the name (remove MH/OH tags) so we can cast/use the actual item
-    local cleanName = name
-    cleanName = string.gsub(cleanName, " %(MH%)", "")
+    local cleanName = string.gsub(name, " %(MH%)", "")
     cleanName = string.gsub(cleanName, " %(OH%)", "")
 
-    -- 3. FLASK CONFIRMATION
     if string.find(cleanName, "Flask") then
         local dialog = StaticPopup_Show("Consumables_CONFIRM_FLASK", cleanName)
         if dialog then dialog.data = cleanName end
         return
     end
 
-    -- 4. USE ITEM (By ID)
     if id and id ~= 0 then
         for bag = 0, 4 do
             for slot = 1, GetContainerNumSlots(bag) do
@@ -562,7 +577,6 @@ local function UseItemOrSpell(dbEntry)
         end
     end
 
-    -- 5. CAST SPELL (Fallback)
     CastSpellByName(cleanName)
 end
 
@@ -916,7 +930,6 @@ function UpdateTrackers()
     local independent = settings.independent
     local catSpacing = settings.catSpacing or 20
 
-    -- 1. GLOBAL HIDE CONDITIONS
     if settings.hidden 
        or (settings.hideCombat and UnitAffectingCombat("player")) 
        or (settings.onlyRaid and GetNumRaidMembers() == 0) then
@@ -926,14 +939,12 @@ function UpdateTrackers()
         return
     end
 
-    -- 2. MAIN CONTAINER SETUP
     if independent then 
         MAIN_CONTAINER:Hide()
         MAIN_CONTAINER:SetScript("OnUpdate", nil)
     else 
         MAIN_CONTAINER:Show()
         
-        -- Master Visibility Control
         if settings.mouseover then
             local startAlpha = MouseIsOver(MAIN_CONTAINER) and 1 or 0
             MAIN_CONTAINER:SetAlpha(startAlpha)
@@ -953,10 +964,11 @@ function UpdateTrackers()
             MAIN_CONTAINER:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
         else
             MAIN_CONTAINER:SetBackdrop(nil)
+            MAIN_CONTAINER:SetBackdropColor(0, 0, 0, 0)
+            MAIN_CONTAINER:SetBackdropBorderColor(0, 0, 0, 0)
         end
     end
 
-    -- 3. POSITION MAIN CONTAINER
     if not independent and MAIN_CONTAINER:GetRight() then
         local scale = MAIN_CONTAINER:GetEffectiveScale() / UIParent:GetEffectiveScale()
         MAIN_CONTAINER:ClearAllPoints()
@@ -971,7 +983,6 @@ function UpdateTrackers()
         end
     end
 
-    -- 4. CATEGORY FRAMES LOOP
     local currentY = 0
     local maxContainerWidth = 0
 
@@ -987,7 +998,6 @@ function UpdateTrackers()
             frame:EnableMouse(true)
             frame:RegisterForDrag("LeftButton")
 
-            -- MOVE SCRIPTS FOR THE FRAME ITSELF
             frame:SetScript("OnDragStart", function() 
                 if IsAltKeyDown() then 
                     local dragTarget = independent and this or MAIN_CONTAINER
@@ -1014,7 +1024,6 @@ function UpdateTrackers()
                 end
             end)
 
-            -- Independent Frame Mouseover
             if independent then
                 if settings.mouseover then
                     local startAlpha = MouseIsOver(frame) and 1 or 0
@@ -1035,14 +1044,14 @@ function UpdateTrackers()
                     frame:SetBackdropBorderColor(0.4, 0.4, 0.4, 1)
                 else
                     frame:SetBackdrop(nil)
+                    frame:SetBackdropColor(0, 0, 0, 0)
+                    frame:SetBackdropBorderColor(0, 0, 0, 0)
                 end
             else
-                -- Grouped Mode: Inherits from MAIN_CONTAINER
                 frame:SetScript("OnUpdate", nil)
                 frame:SetBackdrop(nil)
             end
             
-            -- Parenting/Positioning
             if not frame.isDragging then
                 frame:ClearAllPoints()
                 if independent then
@@ -1060,7 +1069,6 @@ function UpdateTrackers()
                 end
             end
 
-            -- Title rendering
             local txt = getglobal(frameName.."_Title")
             if not txt then txt = frame:CreateFontString(frameName.."_Title", "OVERLAY", "GameFontNormalSmall") end
             txt:SetText(catData.name)
@@ -1068,7 +1076,6 @@ function UpdateTrackers()
             local tPoint = isRightAligned and "TOPRIGHT" or "TOPLEFT"
             txt:SetPoint(tPoint, frame, tPoint, isRightAligned and -PADDING_SIDE or PADDING_SIDE, -PADDING_TOP)
 
-            -- Icon rendering
             local hasVisible, width, height = RenderBuffIcons(frame, catData.buffs, settings, isRightAligned)
 
             if hasVisible then
@@ -1083,7 +1090,6 @@ function UpdateTrackers()
         end
     end
 
-    -- 5. CLEANUP
     local cleanupIndex = table.getn(ConsumablesDB.categories) + 1
     while getglobal("Consumables_CatFrame_" .. cleanupIndex) do
         getglobal("Consumables_CatFrame_" .. cleanupIndex):Hide()
@@ -1386,7 +1392,6 @@ local function CreateConfigWindow()
     local btnSet = CreateFrame("Button", nil, f, "UIPanelButtonTemplate"); btnSet:SetWidth(80); btnSet:SetHeight(20); btnSet:SetPoint("LEFT", btnMain, "RIGHT", 5, 0); btnSet:SetText("Settings")
     btnSet:SetScript("OnClick", function() mainTab:Hide(); settingsTab:Show() end)
 
-    -- LEFT PANEL (Groups)
     local leftPanel = CreateFrame("Frame", nil, mainTab)
     leftPanel:SetWidth(240); leftPanel:SetHeight(400); leftPanel:SetPoint("TOPLEFT", 20, -70)
     leftPanel:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 } })
@@ -1413,7 +1418,6 @@ local function CreateConfigWindow()
     local newCatBtn = CreateFrame("Button", nil, leftPanel, "UIPanelButtonTemplate");
     newCatBtn:SetWidth(70); newCatBtn:SetHeight(20); newCatBtn:SetPoint("LEFT", newCatBox, "RIGHT", 5, 0); newCatBtn:SetText("Add New")
 
-    -- RIGHT PANEL (Buffs)
     local rightPanel = CreateFrame("Frame", nil, mainTab)
     rightPanel:SetWidth(300); rightPanel:SetHeight(400); rightPanel:SetPoint("TOPLEFT", leftPanel, "TOPRIGHT", 10, 0)
     rightPanel:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 } })
@@ -1431,11 +1435,9 @@ local function CreateConfigWindow()
     buffScroll:SetPoint("TOPLEFT", 15, -65); buffScroll:SetPoint("BOTTOMRIGHT", -30, 15)
     local buffContent = CreateFrame("Frame", nil, buffScroll); buffContent:SetWidth(260); buffContent:SetHeight(300); buffScroll:SetScrollChild(buffContent)
 
-    -- ACTIONS
     renameBtn:SetScript("OnClick", function() if ConsumablesDB.categories[CURRENT_CAT_INDEX] then ConsumablesDB.categories[CURRENT_CAT_INDEX].name = catNameBox:GetText(); RefreshGroupList(catContent, buffContent, catNameBox); UPDATE_QUEUED = true end end)
     newCatBtn:SetScript("OnClick", function() local name = newCatBox:GetText(); if name and name ~= "" then table.insert(ConsumablesDB.categories, { name = name, buffs = {} }); newCatBox:SetText(""); RefreshGroupList(catContent, buffContent, catNameBox) end end)
 
-    -- DRAG TRACKING LOOP
     f:SetScript("OnUpdate", function()
         if DRAG_INFO then
             if GHOST_FRAME and GHOST_FRAME:IsShown() then
@@ -1470,7 +1472,6 @@ local function CreateConfigWindow()
         if dropIndicator:IsShown() then dropIndicator:Hide() end
     end)
 
-    -- SEARCH LOGIC
     local resultsFrame = CreateFrame("Frame", "ConsumablesSearchResults", rightPanel);
     resultsFrame:SetWidth(220); resultsFrame:SetHeight(120); resultsFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -10, 0)
     resultsFrame:SetBackdrop({ bgFile="Interface\\Tooltips\\UI-Tooltip-Background", edgeFile="Interface\\Tooltips\\UI-Tooltip-Border", tile=true, tileSize=16, edgeSize=16, insets={left=5, right=5, top=5, bottom=5} })
@@ -1514,7 +1515,6 @@ local function CreateConfigWindow()
         end
     end)
 
-    -- SETTINGS TAB
     local showCheck = CreateFrame("CheckButton", "ConsumablesShowCheck", settingsTab, "OptionsCheckButtonTemplate");
     showCheck:SetPoint("TOPLEFT", 20, -60); getglobal("ConsumablesShowCheckText"):SetText("Enable")
     showCheck:SetChecked(not ConsumablesDB.settings.hidden)
@@ -1530,9 +1530,13 @@ local function CreateConfigWindow()
     end)
 
     local bgCheck = CreateFrame("CheckButton", "ConsumablesBgCheck", settingsTab, "OptionsCheckButtonTemplate");
-    bgCheck:SetPoint("TOPLEFT", 20, -90); getglobal("ConsumablesBgCheckText"):SetText("Show Background")
-    bgCheck:SetChecked(ConsumablesDB.settings.showBackground ~= false)
-    bgCheck:SetScript("OnClick", function() ConsumablesDB.settings.showBackground = this:GetChecked(); UPDATE_QUEUED = true end)
+    bgCheck:SetPoint("TOPLEFT", 20, -90); 
+    getglobal("ConsumablesBgCheckText"):SetText("Show Background")
+    bgCheck:SetChecked(ConsumablesDB.settings.showBackground)
+    bgCheck:SetScript("OnClick", function() 
+        ConsumablesDB.settings.showBackground = (this:GetChecked() == 1)
+        UPDATE_QUEUED = true 
+    end)
 
     local sizeSlider = CreateFrame("Slider", "ConsumablesSizeSlider", settingsTab, "OptionsSliderTemplate"); sizeSlider:SetWidth(180); sizeSlider:SetHeight(16);
     sizeSlider:SetPoint("TOPLEFT", 20, -130); sizeSlider:SetMinMaxValues(16, 64); sizeSlider:SetValueStep(2); sizeSlider:SetValue(ConsumablesDB.settings.iconSize)
@@ -1587,7 +1591,6 @@ local function CreateConfigWindow()
         UpdateMinimapButton()
     end)
 
-    -- CONTROLS REFERENCE (Right Side)
     local controlsFrame = CreateFrame("Frame", nil, settingsTab)
     controlsFrame:SetWidth(200); controlsFrame:SetHeight(300)
     controlsFrame:SetPoint("TOPRIGHT", -20, -60)
@@ -1604,7 +1607,6 @@ local function CreateConfigWindow()
                      "|cffffffffAlt + Left Drag:|r Move Main Frame (or Group)\n\n" ..
                      "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n")
 
-    -- FOOTER CREDIT
     local creditText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     creditText:SetPoint("BOTTOMRIGHT", -15, 15)
     creditText:SetText("|cffff5555Made by Draxen|r")
@@ -1751,13 +1753,13 @@ local function CreateMinimapButton()
 end
 
 local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-eventFrame:RegisterEvent("VARIABLES_LOADED");
-eventFrame:RegisterEvent("UNIT_AURA");
-eventFrame:RegisterEvent("BAG_UPDATE");
-eventFrame:RegisterEvent("RAID_ROSTER_UPDATE");
-eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
-eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+eventFrame:RegisterEvent("VARIABLES_LOADED")
+eventFrame:RegisterEvent("UNIT_AURA")
+eventFrame:RegisterEvent("BAG_UPDATE")
+eventFrame:RegisterEvent("RAID_ROSTER_UPDATE")
+eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 eventFrame:SetScript("OnEvent", function()
     if event == "VARIABLES_LOADED" then
@@ -1771,8 +1773,11 @@ eventFrame:SetScript("OnEvent", function()
                 categories = { { name="Consumables", buffs={} } }
             }
         end
+        
+        if ConsumablesDB.settings.showBackground == nil then 
+            ConsumablesDB.settings.showBackground = true 
+        end
         if ConsumablesDB.settings.independent == nil then ConsumablesDB.settings.independent = false end
-        if ConsumablesDB.settings.showBackground == nil then ConsumablesDB.settings.showBackground = true end
         if ConsumablesDB.settings.mouseover == nil then ConsumablesDB.settings.mouseover = false end
         if ConsumablesDB.settings.minimap == nil then ConsumablesDB.settings.minimap = { hide=false, angle=45 } end
         
