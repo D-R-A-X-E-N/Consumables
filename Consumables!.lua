@@ -739,7 +739,8 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
     end
 
     local xOffset = PADDING_SIDE
-    local yOffset = -(PADDING_TOP + 12) 
+    -- Adjust starting Y offset based on title visibility
+    local yOffset = settings.showTitles and -(PADDING_TOP + 12) or -PADDING_TOP
 
     local colCount = 0
     local maxWidth = 0
@@ -1071,10 +1072,16 @@ function UpdateTrackers()
 
             local txt = getglobal(frameName.."_Title")
             if not txt then txt = frame:CreateFontString(frameName.."_Title", "OVERLAY", "GameFontNormalSmall") end
-            txt:SetText(catData.name)
-            txt:ClearAllPoints()
-            local tPoint = isRightAligned and "TOPRIGHT" or "TOPLEFT"
-            txt:SetPoint(tPoint, frame, tPoint, isRightAligned and -PADDING_SIDE or PADDING_SIDE, -PADDING_TOP)
+            
+            if settings.showTitles then
+                txt:SetText(catData.name)
+                txt:ClearAllPoints()
+                local tPoint = isRightAligned and "TOPRIGHT" or "TOPLEFT"
+                txt:SetPoint(tPoint, frame, tPoint, isRightAligned and -PADDING_SIDE or PADDING_SIDE, -PADDING_TOP)
+                txt:Show()
+            else
+                txt:Hide()
+            end
 
             local hasVisible, width, height = RenderBuffIcons(frame, catData.buffs, settings, isRightAligned)
 
@@ -1515,7 +1522,6 @@ local function CreateConfigWindow()
         end
     end)
 
-    -- SETTINGS TAB
     local showCheck = CreateFrame("CheckButton", "ConsumablesShowCheck", settingsTab, "OptionsCheckButtonTemplate");
     showCheck:SetPoint("TOPLEFT", 20, -60); getglobal("ConsumablesShowCheckText"):SetText("Enable")
     showCheck:SetChecked(not ConsumablesDB.settings.hidden)
@@ -1535,7 +1541,16 @@ local function CreateConfigWindow()
     getglobal("ConsumablesBgCheckText"):SetText("Show Background")
     bgCheck:SetChecked(ConsumablesDB.settings.showBackground)
     bgCheck:SetScript("OnClick", function() 
-        ConsumablesDB.settings.showBackground = (this:GetChecked() == 1) 
+        ConsumablesDB.settings.showBackground = (this:GetChecked() == 1)
+        UPDATE_QUEUED = true 
+    end)
+
+    local titleCheck = CreateFrame("CheckButton", "ConsumablesTitleCheck", settingsTab, "OptionsCheckButtonTemplate");
+    titleCheck:SetPoint("TOPLEFT", 220, -90); 
+    getglobal("ConsumablesTitleCheckText"):SetText("Show Group Titles")
+    titleCheck:SetChecked(ConsumablesDB.settings.showTitles)
+    titleCheck:SetScript("OnClick", function() 
+        ConsumablesDB.settings.showTitles = (this:GetChecked() == 1)
         UPDATE_QUEUED = true 
     end)
 
@@ -1604,7 +1619,6 @@ local function CreateConfigWindow()
         end
     end)
 
-    -- CONTROLS REFERENCE (Right Side)
     local controlsFrame = CreateFrame("Frame", nil, settingsTab)
     controlsFrame:SetWidth(200); controlsFrame:SetHeight(300)
     controlsFrame:SetPoint("TOPRIGHT", -20, -60)
@@ -1623,7 +1637,6 @@ local function CreateConfigWindow()
                      "|cffffffffAlt + Right Click:|r Toggle Left/Right Align\n\n" ..
                      "|cffffffffRight Click Minimap Icon:|r Drag Button")
 
-    -- FOOTER CREDIT
     local creditText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     creditText:SetPoint("BOTTOMRIGHT", -15, 15)
     creditText:SetText("|cffff5555Made by Draxen|r")
@@ -1807,15 +1820,14 @@ eventFrame:SetScript("OnEvent", function()
                 settings = {
                     iconSize = 32, spacing = 4, catSpacing = 20, columns=10, alignRight=false,
                     hideCombat=false, hidden=false, onlyRaid=false, hideActive=false, independent=false,
-                    showBackground=true, mouseover=false, minimap={ hide=false, angle=45, unlocked=false }
+                    showBackground=true, showTitles=true, mouseover=false, minimap={ hide=false, angle=45, unlocked=false }
                 },
                 categories = { { name="Consumables", buffs={} } }
             }
         end
         
-        if ConsumablesDB.settings.showBackground == nil then 
-            ConsumablesDB.settings.showBackground = true 
-        end
+        if ConsumablesDB.settings.showBackground == nil then ConsumablesDB.settings.showBackground = true end
+        if ConsumablesDB.settings.showTitles == nil then ConsumablesDB.settings.showTitles = true end
         if ConsumablesDB.settings.independent == nil then ConsumablesDB.settings.independent = false end
         if ConsumablesDB.settings.mouseover == nil then ConsumablesDB.settings.mouseover = false end
         if ConsumablesDB.settings.minimap == nil then ConsumablesDB.settings.minimap = { hide=false, angle=45, unlocked=false } end
