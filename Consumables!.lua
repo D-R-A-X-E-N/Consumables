@@ -580,70 +580,6 @@ local function UseItemOrSpell(dbEntry)
     CastSpellByName(cleanName)
 end
 
-local function UseItemOrSpell(dbEntry)
-    local isActive = GetBuffStatus(dbEntry)
-    local wbActive = GetWeaponBuffStatus(dbEntry)
-    
-    if isActive or wbActive then
-        UIErrorsFrame:AddMessage("Buff is already active!", 1.0, 0.1, 0.1, 1.0, 3)
-        return
-    end
-
-    if IsControlKeyDown() and dbEntry.canAnnounce then
-        local buffName = dbEntry.name
-        local playerClass = UnitClass("player")
-        local playerName = UnitName("player")
-        
-        DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00Requesting buff: " .. buffName .. "|r")
-
-        if GetNumRaidMembers() > 0 then
-            for i = 1, GetNumRaidMembers() do
-                local name, _, subgroup = GetRaidRosterInfo(i)
-                if name == playerName then
-                    SendChatMessage("Missing " .. buffName .. " on " .. playerClass .. " in Group " .. subgroup, "RAID")
-                    return
-                end
-            end
-        elseif GetNumPartyMembers() > 0 then
-            SendChatMessage("Missing " .. buffName .. " on " .. playerClass, "PARTY")
-            return
-        else
-            DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Not in a group to request buffs.|r")
-        end
-        return
-    end
-
-    local name = dbEntry.name
-    local id = dbEntry.id
-
-    local cleanName = name
-    cleanName = string.gsub(cleanName, " %(MH%)", "")
-    cleanName = string.gsub(cleanName, " %(OH%)", "")
-
-    if string.find(cleanName, "Flask") then
-        local dialog = StaticPopup_Show("Consumables_CONFIRM_FLASK", cleanName)
-        if dialog then dialog.data = cleanName end
-        return
-    end
-
-    if id and id ~= 0 then
-        for bag = 0, 4 do
-            for slot = 1, GetContainerNumSlots(bag) do
-                local link = GetContainerItemLink(bag, slot)
-                if link then
-                    local _, _, itemID = string.find(link, "item:(%d+):")
-                    if itemID and tonumber(itemID) == id then 
-                        UseContainerItem(bag, slot)
-                        return 
-                    end
-                end
-            end
-        end
-    end
-
-    CastSpellByName(cleanName)
-end
-
 -- =============================================================
 -- LOGIC: RENDER FRAME
 -- =============================================================
@@ -1598,12 +1534,13 @@ local function CreateConfigWindow()
         UPDATE_QUEUED = true 
     end)
     
-    local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "OptionsCheckButtonTemplate");
-    mmCheck:SetPoint("TOPLEFT", 20, -410); getglobal("ConsumablesMMCheckText"):SetText("Show Minimap Button")
+local mmCheck = CreateFrame("CheckButton", "ConsumablesMMCheck", settingsTab, "OptionsCheckButtonTemplate");
+    mmCheck:SetPoint("TOPLEFT", 20, -410); 
+    getglobal("ConsumablesMMCheckText"):SetText("Show Minimap Button")
     mmCheck:SetChecked(not (ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.hide))
     mmCheck:SetScript("OnClick", function() 
         if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
-        ConsumablesDB.settings.minimap.hide = not this:GetChecked()
+        ConsumablesDB.settings.minimap.hide = (this:GetChecked() ~= 1)
         UpdateMinimapButton()
     end)
 
@@ -1703,13 +1640,106 @@ end
 
 local function UpdateMinimapButton() 
     if Cons_MinimapButton then
-        if ConsumablesDB.settings.minimap.hide then
+        if ConsumablesDB.settings.minimap and ConsumablesDB.settings.minimap.hide then
             Cons_MinimapButton:Hide()
         else
             Cons_MinimapButton:Show()
         end
     end
 end 
+
+local function CreateMinimapButton()
+    if Cons_MinimapButton then return end
+
+    local miniMapBtn = CreateFrame("Button", "Cons_MinimapButton", Minimap)
+    miniMapBtn:SetWidth(33); miniMapBtn:SetHeight(33)
+    miniMapBtn:SetFrameStrata("MEDIUM"); miniMapBtn:SetFrameLevel(8)
+    miniMapBtn:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+    miniMapBtn:SetMovable(true)
+
+    if not ConsumablesDB.settings.minimap then ConsumablesDB.settings.minimap = {} end
+    if not ConsumablesDB.settings.minimap.angle then ConsumablesDB.settings.minimap.angle = 225 end
+
+    miniMapBtn.icon = miniMapBtn:CreateTexture(nil, "BACKGROUND")
+    miniMapBtn.icon:SetPoint("CENTER", 0, 0)
+    miniMapBtn.icon:SetWidth(20); miniMapBtn.icon:SetHeight(20)
+    miniMapBtn.icon:SetTexture("Interface\\Icons\\INV_Potion_51")
+    miniMapBtn.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+
+    miniMapBtn.border = miniMapBtn:CreateTexture(nil, "OVERLAY")
+    miniMapBtn.border:SetPoint("TOPLEFT", 0, 0)
+    miniMapBtn.border:SetWidth(53); miniMapBtn.border:SetHeight(53)
+    miniMapBtn.border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+
+    local function UpdateMinimapButtonPosition()
+        miniMapBtn:ClearAllPoints()
+        if ConsumablesDB.settings.minimap.unlocked then
+            miniMapBtn:SetParent(UIParent)
+            local p = ConsumablesDB.settings.minimap.pos
+            if p then
+                miniMapBtn:SetPoint(p.point, UIParent, p.relativePoint, p.x, p.y)
+            else
+                miniMapBtn:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+            end
+        else
+            miniMapBtn:SetParent(Minimap)
+            local angle = ConsumablesDB.settings.minimap.angle
+            local radius = 80
+            local x = radius * math.cos(math.rad(angle))
+            local y = radius * math.sin(math.rad(angle))
+            miniMapBtn:SetPoint("CENTER", Minimap, "CENTER", x, y)
+        end
+    end
+
+    miniMapBtn:RegisterForDrag("RightButton")
+    miniMapBtn:RegisterForClicks("LeftButtonUp")
+
+    miniMapBtn:SetScript("OnDragStart", function()
+        if ConsumablesDB.settings.minimap.unlocked then
+            this:StartMoving()
+        else
+            this:SetScript("OnUpdate", function()
+                local mx, my = GetCursorPosition()
+                local px, py = Minimap:GetCenter()
+                local scale = Minimap:GetEffectiveScale()
+                mx, my = mx / scale, my / scale
+                local dx, dy = mx - px, my - py
+                local angle = math.deg(math.atan2(dy, dx))
+                if angle < 0 then angle = angle + 360 end
+                ConsumablesDB.settings.minimap.angle = angle
+                UpdateMinimapButtonPosition()
+            end)
+        end
+    end)
+
+    miniMapBtn:SetScript("OnDragStop", function()
+        this:StopMovingOrSizing()
+        this:SetScript("OnUpdate", nil)
+        if ConsumablesDB.settings.minimap.unlocked then
+            local point, _, relativePoint, x, y = this:GetPoint()
+            ConsumablesDB.settings.minimap.pos = { point = point, relativePoint = relativePoint, x = x, y = y }
+        end
+    end)
+
+    miniMapBtn:SetScript("OnClick", function()
+        if arg1 == "LeftButton" then 
+            ToggleConfig() 
+        end
+    end)
+
+    miniMapBtn:SetScript("OnEnter", function()
+        GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+        GameTooltip:AddLine("Consumables")
+        GameTooltip:AddLine("Left Click: Menu", 1, 1, 1)
+        GameTooltip:AddLine("Right Click: Drag", 0.7, 0.7, 0.7)
+        GameTooltip:Show()
+    end)
+    miniMapBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+    miniMapBtn.UpdatePosition = UpdateMinimapButtonPosition
+    UpdateMinimapButtonPosition()
+    UpdateMinimapButton()
+end
 
 local function CreateMinimapButton()
     if Cons_MinimapButton then return end
@@ -1834,6 +1864,7 @@ eventFrame:SetScript("OnEvent", function()
         if ConsumablesDB.settings.minimap.unlocked == nil then ConsumablesDB.settings.minimap.unlocked = false end
         
         CreateMinimapButton()
+        UpdateMinimapButton()
         UPDATE_QUEUED = true
     elseif event == "UNIT_AURA" then
         if arg1 == "player" then UPDATE_QUEUED = true end
