@@ -188,7 +188,7 @@ local MASTER_DB = {
     { id=51936, name="Voidstone", icon="inv_enchant_voidsphere.png" },  
     { id=51935, name="Wrathstone", icon="inv_misc_gem_bloodstone_02.png" },     
     { id=51934, name="Felstone", icon="inv_misc_gem_felstone.png" },                       
-    { id=13699, name="Firestone", icon="inv_ammo_firetar", bufficon="inv_ammo_firetar", checkTooltip="Firestone"  },   
+    { id=13699, name="Firestone", icon="inv_ammo_firetar", bufficon="inv_ammo_firetar", checkTooltip="Increases the critical strike chance of your Fire spells by 2%"  },   
   
 
     { id=0,     name="Windfury Weapon (MH)", icon="spell_nature_cyclone" },
