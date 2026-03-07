@@ -253,10 +253,10 @@ local MASTER_DB = {
     { id=0, name="Greater Blessing of Light", icon="spell_holy_greaterblessingoflight", bufficon={ "spell_holy_prayerofhealing02", "spell_holy_greaterblessingoflight" }, canAnnounce = true },
     
     { id=0, name="Blessing of Salvation", icon="spell_holy_sealofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation" }, canAnnounce = true },
-    { id=0, name="Greater Blessing of Salvation", icon="spell_holy_greaterblessingofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation", canAnnounce = true } },
+    { id=0, name="Greater Blessing of Salvation", icon="spell_holy_greaterblessingofsalvation", bufficon={ "spell_holy_sealofsalvation", "spell_holy_greaterblessingofsalvation"}, canAnnounce = true },
     
-    { id=0, name="Blessing of Sanctuary", icon="spell_nature_lightningshield", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary", canAnnounce = true } },
-    { id=0, name="Greater Blessing of Sanctuary", icon="spell_holy_greaterblessingofsanctuary", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary", canAnnounce = true } },
+    { id=0, name="Blessing of Sanctuary", icon="spell_nature_lightningshield", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary"}, canAnnounce = true },
+    { id=0, name="Greater Blessing of Sanctuary", icon="spell_holy_greaterblessingofsanctuary", bufficon={ "spell_nature_lightningshield", "spell_holy_greaterblessingofsanctuary"}, canAnnounce = true },
     
     { id=0, name="Devotion Aura", icon="spell_holy_devotionaura" },
     { id=0, name="Retribution Aura", icon="spell_holy_auraoflight" },
