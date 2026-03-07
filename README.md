@@ -8,7 +8,7 @@ Have you ever thought to yourself what consumables do I need? What consumables d
 
 💡Features: 💡
 
-🛠️ - Create and name custom consumable tracking frames, and assign buffs/consumabes to individual groups. Many ways to configure, with individual specs, roles, or groups for each raid.
+🛠️ - Create and name custom consumable tracking frames, and assign buffs/consumabes to individual groups. Many ways to configure, with individual specs, roles, or groups for each raid, and unique character profiles.
 
 🧃 - Every SINGLE buff in the game (Pending any missing buffs, the list of which is growing smaller by the day).
 
@@ -26,7 +26,7 @@ Have you ever thought to yourself what consumables do I need? What consumables d
 
 🧑‍🤝‍🧑 - Group the consumables frames, or detach to separate groups, to allow maximum visual cohesion.
 
-🔒 - Option to hide the frames when not in a raid.
+🔒 - Option to hide the frames when not in a raid, or only show on mouseover.
 
 📐 - Change the size, vertical/horizontal spacing, and rows of icons, as well as justification of the frames.
 
@@ -38,6 +38,6 @@ Have you ever thought to yourself what consumables do I need? What consumables d
 
 🏎️ - Fast, lightweight addon!
 
-🗺️ - MINI MAP BUTTON.
+🗺️ - MINI MAP BUTTON. (Movable, and detachable.)
 
 (Please note, all code is produced off the top of the dome, no AI was used, completely freestyle code, 100% natural, organic, olive oil code 🫒) PS: I have tested the addon, however it is likely that there may be bugs, or issues. Please notify me if you find them for immediate(ish) rectification.
