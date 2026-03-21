@@ -69,7 +69,7 @@ local MASTER_DB = {
     { id=3389,  name="Elixir of Defense", icon="inv_potion_68" },
     { id=9088,  name="Gift of Arthas", icon="inv_potion_28", bufficon="spell_shadow_fingerofdeath", checkTooltip="Gift of Arthas" },
     { id=61224, name="Dreamshard Elixir", icon="inv_potion_113" },
-    { id=9224,  name="Elixir of Demonslaying", icon="inv_potion_27", bufficon="spell_holy_retributionaura", checkTooltip="Increases attack power by 265 against demons. Lasts 300 sec." },
+    { id=9224,  name="Elixir of Demonslaying", icon="inv_potion_27", bufficon="spell_holy_retributionaura" },
 
     -- === POTIONS ===
     { id=13446, name="Major Healing Potion", icon="inv_potion_54" },
