@@ -193,13 +193,9 @@ local MASTER_DB = {
   
 
     { id=0,     name="Windfury Weapon (MH)", icon="spell_nature_cyclone" },
-    { id=0,     name="Windfury Weapon (OH)", icon="spell_nature_cyclone" },
     { id=0,     name="Rockbiter Weapon (MH)", icon="spell_nature_rockbiter" },
-    { id=0,     name="Rockbiter Weapon (OH)", icon="spell_nature_rockbiter" },
     { id=0,     name="Flametongue Weapon (MH)", icon="spell_fire_flametongue" },
-    { id=0,     name="Flametongue Weapon (OH)", icon="spell_fire_flametongue" },
     { id=0,     name="Frostbrand Weapon (MH)", icon="spell_frost_frostbrand" },
-    { id=0,     name="Frostbrand Weapon (OH)", icon="spell_frost_frostbrand" },
 
     { id=0,     name="Instant Poison (MH)", icon="ability_poisons" },
     { id=0,     name="Instant Poison (OH)", icon="ability_poisons" },
@@ -502,6 +498,34 @@ local function IsWeaponCoating(name)
         or string.find(n, "poison")
 end
 
+local function IsShamanImbue(name)
+    local n = string.lower(name)
+    return string.find(n, "windfury weapon") or string.find(n, "rockbiter weapon")
+        or string.find(n, "flametongue weapon") or string.find(n, "frostbrand weapon")
+end
+
+-- Applies a Shaman weapon imbue spell to the main hand (Shamans cannot dual wield)
+-- spellName: the clean spell name (without "(MH)" suffix)
+local function ApplyShamanImbue(spellName)
+    if not GetInventoryItemTexture("player", 16) then
+        DEFAULT_CHAT_FRAME:AddMessage("|cffFF6B6BNo weapon equipped in main hand slot.|r")
+        return false
+    end
+
+    CastSpellByName(spellName)
+    if SpellIsTargeting() then
+        ClickInventoryItem(16)
+        SpellStopTargeting()
+    else
+        PickupInventoryItem(16)
+        ReplaceEnchant()
+        ClearCursor()
+    end
+
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00FF00" .. spellName .. " applied to main hand.|r")
+    return true
+end
+
 -- Weapon Buff Status (Returns: isActive, timeRemaining, SlotName)
 local function GetWeaponBuffStatus(dbEntry)
     if not IsWeaponBuff(dbEntry.name) then return false, 0, nil end
@@ -628,6 +652,12 @@ local function UseItemOrSpell(dbEntry)
             ApplyWeaponOil(cleanName, "offhand")
             return
         end
+    end
+
+    -- Shaman weapon imbues (spells, not items): always main hand only
+    if IsShamanImbue(cleanName) then
+        ApplyShamanImbue(cleanName)
+        return
     end
 
     if id and id ~= 0 then
