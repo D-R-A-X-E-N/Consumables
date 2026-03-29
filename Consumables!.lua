@@ -70,6 +70,7 @@ local MASTER_DB = {
     { id=9088,  name="Gift of Arthas", icon="inv_potion_28", bufficon="spell_shadow_fingerofdeath", checkTooltip="Gift of Arthas" },
     { id=61224, name="Dreamshard Elixir", icon="inv_potion_113" },
     { id=9224,  name="Elixir of Demonslaying", icon="inv_potion_27", bufficon="spell_holy_retributionaura" },
+    { id=3391,  name="Elixir of Greater Intellect", icon="Inv_potion_10", bufficon="Inv_potion_10", checkTooltip="Greater Intellect" },
 
     -- === POTIONS ===
     { id=13446, name="Major Healing Potion", icon="inv_potion_54" },
@@ -110,7 +111,8 @@ local MASTER_DB = {
     { id=51720, name="Power Mushroom", icon="inv_mushroom_14", bufficon="spell_misc_food" },
     { id=51717, name="Hardened Mushroom", icon="inv_mushroom_15", bufficon="spell_misc_food", bufficon="inv_boots_plate_03", checkTooltip="Increased Stamina" },
     { id=84040, name="Le Fishe Au Chocolat", icon="inv_misc_fishe_au_chocolate", bufficon="spell_misc_food" },
-    { id=51714, name="Sour Mountain Berry", icon="inv_misc_food_40", bufficon="spell_misc_food" },
+    { id=51711, name="Sour Mountain Berry", icon="INV_Misc_Food_74", bufficon="INV_Gauntlets_19" },
+    { id=42163, name="Squid Eel Skewer", icon="INV_Misc_Food_68", bufficon="Spell_misc_food", checkTooltip="Agility increased by 20" },
     { id=83309, name="Empowering Herbal Salad", icon="inv_misc_food_salad", bufficon="spell_nature_healingway", checkTooltip="Healing Bonus" },
     { id=18045, name="Tender Wolf Steak", icon="inv_misc_food_47", bufficon="spell_misc_food" }, 
     { id=53015, name="Gurubashi Gumbo", icon="inv_misc_food_64", bufficon="spell_misc_food" },         
@@ -192,13 +194,9 @@ local MASTER_DB = {
   
 
     { id=0,     name="Windfury Weapon (MH)", icon="spell_nature_cyclone" },
-    { id=0,     name="Windfury Weapon (OH)", icon="spell_nature_cyclone" },
     { id=0,     name="Rockbiter Weapon (MH)", icon="spell_nature_rockbiter" },
-    { id=0,     name="Rockbiter Weapon (OH)", icon="spell_nature_rockbiter" },
     { id=0,     name="Flametongue Weapon (MH)", icon="spell_fire_flametongue" },
-    { id=0,     name="Flametongue Weapon (OH)", icon="spell_fire_flametongue" },
     { id=0,     name="Frostbrand Weapon (MH)", icon="spell_frost_frostbrand" },
-    { id=0,     name="Frostbrand Weapon (OH)", icon="spell_frost_frostbrand" },
 
     { id=0,     name="Instant Poison (MH)", icon="ability_poisons" },
     { id=0,     name="Instant Poison (OH)", icon="ability_poisons" },
@@ -449,6 +447,86 @@ local function IsWeaponBuff(name)
     return false
 end
 
+-- Applies a weapon coating (oil, sharpening stone, poison) from bags to the specified weapon slot
+-- slot: "mainhand" or "offhand"
+-- itemName: the clean item name (without "(MH)"/"(OH)" suffix)
+local function ApplyWeaponOil(itemName, slot)
+    for bag = 0, 4 do
+        for bagSlot = 1, GetContainerNumSlots(bag) do
+            local link = GetContainerItemLink(bag, bagSlot)
+            if link then
+                local _, _, linkItemName = string.find(link, "%[(.-)%]")
+                if linkItemName then
+                    -- Remove charge information if present (e.g., "Brilliant Wizard Oil (5)" -> "Brilliant Wizard Oil")
+                    linkItemName = string.gsub(linkItemName, " %(%d+%)$", "")
+                    if linkItemName == itemName then
+                        if slot == "mainhand" then
+                            if not GetInventoryItemTexture("player", 16) then
+                                DEFAULT_CHAT_FRAME:AddMessage("|cffFF6B6BNo weapon equipped in main hand slot.|r")
+                                return false
+                            end
+                            UseContainerItem(bag, bagSlot)
+                            PickupInventoryItem(16)
+                            ReplaceEnchant()
+                            ClearCursor()
+                            DEFAULT_CHAT_FRAME:AddMessage("|cff00FF00" .. itemName .. " applied to main hand.|r")
+                        elseif slot == "offhand" then
+                            if not GetInventoryItemTexture("player", 17) then
+                                DEFAULT_CHAT_FRAME:AddMessage("|cffFF6B6BNo weapon equipped in off hand slot.|r")
+                                return false
+                            end
+                            UseContainerItem(bag, bagSlot)
+                            PickupInventoryItem(17)
+                            ReplaceEnchant()
+                            ClearCursor()
+                            DEFAULT_CHAT_FRAME:AddMessage("|cff00FF00" .. itemName .. " applied to off hand.|r")
+                        end
+                        return true
+                    end
+                end
+            end
+        end
+    end
+    DEFAULT_CHAT_FRAME:AddMessage("|cffFF6B6B" .. itemName .. " not found in bags.|r")
+    return false
+end
+
+local function IsWeaponCoating(name)
+    local n = string.lower(name)
+    return string.find(n, "wizard oil") or string.find(n, "mana oil")
+        or string.find(n, "frost oil") or string.find(n, "shadowoil")
+        or string.find(n, "coating") or string.find(n, "sharpening stone")
+        or string.find(n, "poison")
+end
+
+local function IsShamanImbue(name)
+    local n = string.lower(name)
+    return string.find(n, "windfury weapon") or string.find(n, "rockbiter weapon")
+        or string.find(n, "flametongue weapon") or string.find(n, "frostbrand weapon")
+end
+
+-- Applies a Shaman weapon imbue spell to the main hand (Shamans cannot dual wield)
+-- spellName: the clean spell name (without "(MH)" suffix)
+local function ApplyShamanImbue(spellName)
+    if not GetInventoryItemTexture("player", 16) then
+        DEFAULT_CHAT_FRAME:AddMessage("|cffFF6B6BNo weapon equipped in main hand slot.|r")
+        return false
+    end
+
+    CastSpellByName(spellName)
+    if SpellIsTargeting() then
+        ClickInventoryItem(16)
+        SpellStopTargeting()
+    else
+        PickupInventoryItem(16)
+        ReplaceEnchant()
+        ClearCursor()
+    end
+
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00FF00" .. spellName .. " applied to main hand.|r")
+    return true
+end
+
 -- Weapon Buff Status (Returns: isActive, timeRemaining, SlotName)
 local function GetWeaponBuffStatus(dbEntry)
     if not IsWeaponBuff(dbEntry.name) then return false, 0, nil end
@@ -561,6 +639,25 @@ local function UseItemOrSpell(dbEntry)
     if string.find(cleanName, "Flask") then
         local dialog = StaticPopup_Show("Consumables_CONFIRM_FLASK", cleanName)
         if dialog then dialog.data = cleanName end
+        return
+    end
+
+    -- Weapon coatings (oils, sharpening stones, poisons): apply directly to weapon slot
+    if IsWeaponCoating(cleanName) then
+        local isMH = string.find(name, "%(MH%)")
+        local isOH = string.find(name, "%(OH%)")
+        if isMH then
+            ApplyWeaponOil(cleanName, "mainhand")
+            return
+        elseif isOH then
+            ApplyWeaponOil(cleanName, "offhand")
+            return
+        end
+    end
+
+    -- Shaman weapon imbues (spells, not items): always main hand only
+    if IsShamanImbue(cleanName) then
+        ApplyShamanImbue(cleanName)
         return
     end
 
