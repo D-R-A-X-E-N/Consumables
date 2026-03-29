@@ -72,8 +72,8 @@ local MASTER_DB = {
     { id=9224,  name="Elixir of Demonslaying", icon="inv_potion_27", bufficon="spell_holy_retributionaura" },
 
     -- === POTIONS ===
-    { id=13446, name="Major Healing Potion", icon="inv_potion_54" },
-    { id=13444, name="Major Mana Potion", icon="inv_potion_76" },    
+    { id=13446, name="Major Healing Potion", icon="inv_potion_54", fallback="Superior Healing Potion" },
+    { id=13444, name="Major Mana Potion", icon="inv_potion_76", fallback="Superior Mana Potion" },    
     { id=13443, name="Superior Mana Potion", icon="inv_potion_74" },   
     { id=3928, name="Superior Healing Potion", icon="inv_potion_53" },        
     { id=61675, name="Nordanaar Herbal Tea", icon="inv_drink_waterskin_03" },
@@ -90,10 +90,10 @@ local MASTER_DB = {
     { id=61181, name="Potion of Quickness", icon="inv_potion_08" , bufficon="spell_nature_invisibilty", checkTooltip="Potion of Quickness" },   
     { id=20004, name="Major Troll's Blood Potion", icon="inv_potion_80", bufficon="inv_potion_79", checkTooltip="Regeneration" },   
     
-        -- === Healthstones ===
+    -- === Healthstones ===
     { id=9421, name="Major Healthstone (1200)", icon="inv_stone_17" },
-    { id=19012, name="Major Healthstone (1320) ", icon="inv_stone_18" },
-    { id=19013, name="Major Healthstone (1440)", icon="inv_stone_04" },
+    { id=19012, name="Major Healthstone (1320) ", icon="inv_stone_18", fallback="Major Healthstone (1200)" },
+    { id=19013, name="Major Healthstone (1440)", icon="inv_stone_04", fallback="Major Healthstone (1320) " },
 
     -- === FOOD ===
     { id=20452, name="Smoked Desert Dumplings", icon="inv_misc_food_64", bufficon="spell_misc_food" },
@@ -111,7 +111,7 @@ local MASTER_DB = {
     { id=51717, name="Hardened Mushroom", icon="inv_mushroom_15", bufficon="spell_misc_food", bufficon="inv_boots_plate_03", checkTooltip="Increased Stamina" },
     { id=84040, name="Le Fishe Au Chocolat", icon="inv_misc_fishe_au_chocolate", bufficon="spell_misc_food" },
     { id=51711, name="Sour Mountain Berry", icon="INV_Misc_Food_74", bufficon="INV_Gauntlets_19" },
-    { id=42163, name="Squid Eel Skewer", icon="INV_Misc_Food_68", bufficon="Spell_misc_food", checkTooltip="Agility increased by 20" },
+    { id=42163, name="Squid Eel Skewer", icon="INV_Misc_Food_68", bufficon="Spell_misc_food", checkTooltip="Agility increased by 20", fallback="Sour Mountain Berry" },
     { id=83309, name="Empowering Herbal Salad", icon="inv_misc_food_salad", bufficon="spell_nature_healingway", checkTooltip="Healing Bonus" },
     { id=18045, name="Tender Wolf Steak", icon="inv_misc_food_47", bufficon="spell_misc_food" }, 
     { id=53015, name="Gurubashi Gumbo", icon="inv_misc_food_64", bufficon="spell_misc_food" },         
@@ -122,7 +122,8 @@ local MASTER_DB = {
     { id=21151, name="Rumsey Rum Black Label", icon="inv_drink_04" },
 
     -- === JUJUS / OTHER ===
-    { id=12820, name="Winterfall Firewater", icon="inv_potion_92" },
+    { id=12820, name="Winterfall Firewater", icon="inv_potion_92", fallback="Blackroot Brew" },
+    { id=42014, name="Blackroot Brew", icon="inv_drink_33", fallback="Winterfall Firewater" },
     { id=12451, name="Juju Power", icon="inv_misc_monsterscales_11" },
     { id=12460, name="Juju Might", icon="inv_misc_monsterscales_07" },
     { id=12450, name="Juju Flurry", icon="inv_misc_monsterscales_17" },
@@ -141,14 +142,14 @@ local MASTER_DB = {
     { id=10646, name="Goblin Sapper Charge", icon="spell_fire_selfdestruct" },
 
     -- === PROTECTION POTIONS ===
-    { id=13457, name="Greater Fire Protection Potion", icon="inv_potion_117", bufficon="spell_fire_firearmor", checkTooltip="Fire Protection" },
+    { id=13457, name="Greater Fire Protection Potion", icon="inv_potion_117", bufficon="spell_fire_firearmor", checkTooltip="Fire Protection", fallback="Fire Protection Potion" },
     { id=6049, name="Fire Protection Potion", icon="inv_potion_16", bufficon="spell_fire_firearmor", checkTooltip="Fire Protection" },    
-    { id=13456, name="Greater Frost Protection Potion", icon="inv_potion_20", bufficon="spell_frost_frostarmor02", checkTooltip="Frost Protection" },
+    { id=13456, name="Greater Frost Protection Potion", icon="inv_potion_20", bufficon="spell_frost_frostarmor02", checkTooltip="Frost Protection", fallback="Frost Protection Potion" },
     { id=6050, name="Frost Protection Potion", icon="inv_potion_13", bufficon="spell_frost_frostarmor02", checkTooltip="Frost Protection" },    
-    { id=13459, name="Greater Shadow Protection Potion", icon="inv_potion_23", bufficon="spell_shadow_ragingscream", checkTooltip="Shadow Protection" },
+    { id=13459, name="Greater Shadow Protection Potion", icon="inv_potion_23", bufficon="spell_shadow_ragingscream", checkTooltip="Shadow Protection", fallback=" Shadow Protection Potion" },
     { id=6048, name=" Shadow Protection Potion", icon="inv_potion_44", bufficon="Spell_shadow_ragingscream", checkTooltip="Shadow Protection" },    
     { id=13461, name="Greater Arcane Protection Potion", icon="inv_potion_83", bufficon="spell_holy_prayerofhealing02", checkTooltip="Arcane Protection" },
-    { id=13458, name="Greater Nature Protection Potion", icon="inv_potion_22", bufficon="spell_nature_spiritarmor", checkTooltip="Nature Protection" },     
+    { id=13458, name="Greater Nature Protection Potion", icon="inv_potion_22", bufficon="spell_nature_spiritarmor", checkTooltip="Nature Protection", fallback="Nature Protection Potion" },     
     { id=6052, name="Nature Protection Potion", icon="inv_potion_06", bufficon="spell_nature_spiritarmor", checkTooltip="Nature Protection" },    
     { id=9036, name="Magic Resistance Potion", icon="inv_potion_16", bufficon="inv_potion_08", checkTooltip="Resistance" },    
     { id=3386, name="Elixir of Poison Resistance", icon="inv_potion_12" },
@@ -597,6 +598,34 @@ local function FindInDB(text)
     return results
 end
 
+-- Looks up a MASTER_DB entry by exact name (case-insensitive)
+local function FindDBEntryByName(searchName)
+    local lower = string.lower(searchName)
+    for _, dbRow in ipairs(MASTER_DB) do
+        if string.lower(dbRow.name) == lower then
+            return dbRow
+        end
+    end
+    return nil
+end
+
+-- Returns true if the player has at least one of the item (by id) in their bags
+local function HasItemInBags(id)
+    if not id or id == 0 then return false end
+    for bag = 0, 4 do
+        for slot = 1, GetContainerNumSlots(bag) do
+            local link = GetContainerItemLink(bag, slot)
+            if link then
+                local _, _, itemID = string.find(link, "item:(%d+):")
+                if itemID and tonumber(itemID) == id then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 local function UseItemOrSpell(dbEntry)
     local isActive = GetBuffStatus(dbEntry)
     local wbActive = GetWeaponBuffStatus(dbEntry)
@@ -660,13 +689,28 @@ local function UseItemOrSpell(dbEntry)
         return
     end
 
-    if id and id ~= 0 then
+    -- Check if primary item is in bags; if not, try fallback item (if defined)
+    local entryToUse = dbEntry
+    if id and id ~= 0 and not HasItemInBags(id) and dbEntry.fallback then
+        local fallbackEntry = FindDBEntryByName(dbEntry.fallback)
+        if fallbackEntry and fallbackEntry.id and fallbackEntry.id ~= 0 and HasItemInBags(fallbackEntry.id) then
+            DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00[Consumables] " .. dbEntry.name .. " not found. Using fallback: " .. fallbackEntry.name .. "|r")
+            entryToUse = fallbackEntry
+        end
+    end
+
+    local useID = entryToUse.id
+    local useName = entryToUse.name
+    local useCleanName = string.gsub(useName, " %(MH%)", "")
+    useCleanName = string.gsub(useCleanName, " %(OH%)", "")
+
+    if useID and useID ~= 0 then
         for bag = 0, 4 do
             for slot = 1, GetContainerNumSlots(bag) do
                 local link = GetContainerItemLink(bag, slot)
                 if link then
                     local _, _, itemID = string.find(link, "item:(%d+):")
-                    if itemID and tonumber(itemID) == id then 
+                    if itemID and tonumber(itemID) == useID then 
                         UseContainerItem(bag, slot)
                         return 
                     end
@@ -675,7 +719,7 @@ local function UseItemOrSpell(dbEntry)
         end
     end
 
-    CastSpellByName(cleanName)
+    CastSpellByName(useCleanName)
 end
 
 -- =============================================================
@@ -899,11 +943,28 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
                 iconF.buffData = buff
                 iconF:SetScript("OnEnter", function() 
                     if frame:GetAlpha() > 0.1 then
+                        local bd = this.buffData
                         GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-                        GameTooltip:SetText(this.buffData.name, 1, 1, 1)
+                        GameTooltip:SetText(bd.name, 1, 1, 1)
                         if isActive then GameTooltip:AddLine("Active", 0, 1, 0)
                         elseif wbActive then GameTooltip:AddLine("Active ("..(wbLoc or "?")..")", 0, 1, 0)
                         else GameTooltip:AddLine("Inactive", 1, 0.2, 0.2) end
+                        -- Show fallback info if defined
+                        if bd.fallback then
+                            local hasPrimary = HasItemInBags(bd.id)
+                            local fbEntry = FindDBEntryByName(bd.fallback)
+                            local hasFallback = fbEntry and HasItemInBags(fbEntry.id)
+                            if hasPrimary then
+                                GameTooltip:AddLine("Primary in bags", 0.4, 1, 0.4)
+                            else
+                                GameTooltip:AddLine("Primary: OUT OF STOCK", 1, 0.4, 0.4)
+                            end
+                            if hasFallback then
+                                GameTooltip:AddLine("Fallback: " .. bd.fallback, 1, 0.85, 0)
+                            else
+                                GameTooltip:AddLine("Fallback: " .. bd.fallback .. " (none in bags)", 0.6, 0.6, 0.6)
+                            end
+                        end
                         GameTooltip:Show()
                     end
                 end)
