@@ -689,9 +689,9 @@ local function UseItemOrSpell(dbEntry)
         return
     end
 
-    -- Check if primary item is in bags; if not, try fallback item (if defined)
+    -- Check if primary item is in bags; if not, try fallback item (if defined and enabled)
     local entryToUse = dbEntry
-    if id and id ~= 0 and not HasItemInBags(id) and dbEntry.fallback then
+    if C_Profile.settings.useFallbacks and id and id ~= 0 and not HasItemInBags(id) and dbEntry.fallback then
         local fallbackEntry = FindDBEntryByName(dbEntry.fallback)
         if fallbackEntry and fallbackEntry.id and fallbackEntry.id ~= 0 and HasItemInBags(fallbackEntry.id) then
             DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00[Consumables] " .. dbEntry.name .. " not found. Using fallback: " .. fallbackEntry.name .. "|r")
@@ -867,12 +867,12 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
                     t = iconF:CreateTexture(iconF:GetName().."_Tex", "BACKGROUND")
                     t:SetAllPoints(iconF)
                 end
-                -- Show fallback icon if primary is out of stock
+                -- Show fallback icon if primary is out of stock (and fallbacks enabled)
                 local fbEntry = buff.fallback and FindDBEntryByName(buff.fallback) or nil
                 local primaryCount = GetItemCountByID(buff.id)
-                local fallbackCount = fbEntry and GetItemCountByID(fbEntry.id) or 0
+                local fallbackCount = (fbEntry and C_Profile.settings.useFallbacks) and GetItemCountByID(fbEntry.id) or 0
                 local displayIcon = buff.icon
-                if primaryCount == 0 and fallbackCount > 0 and fbEntry then
+                if C_Profile.settings.useFallbacks and primaryCount == 0 and fallbackCount > 0 and fbEntry then
                     displayIcon = fbEntry.icon
                 end
                 t:SetTexture("Interface\\Icons\\" .. displayIcon)
@@ -926,10 +926,10 @@ function RenderBuffIcons(frame, buffList, settings, isRightAligned)
                     countText:SetText(primaryCount .. "+" .. fallbackCount)
                 elseif primaryCount > 0 then
                     countText:SetText(primaryCount)
-                elseif fallbackCount > 0 then
+                elseif fallbackCount > 0 and C_Profile.settings.useFallbacks then
                     countText:SetText(fallbackCount)
                 else
-                    countText:SetText("")
+                    countText:SetText(primaryCount > 0 and primaryCount or "")
                 end
 
                 local timerText = getglobal(iconF:GetName().."_Timer")
@@ -1725,6 +1725,16 @@ local function CreateConfigWindow()
         UPDATE_QUEUED = true 
     end)
 
+    local fallbackCheck = CreateFrame("CheckButton", "ConsumablesFallbackCheck", settingsTab, "OptionsCheckButtonTemplate");
+    fallbackCheck:SetPoint("TOPLEFT", 20, -210); 
+    fallbackCheck:SetFrameLevel(settingsTab:GetFrameLevel() + 5)
+    getglobal("ConsumablesFallbackCheckText"):SetText("Use Fallback Items")
+    fallbackCheck:SetChecked(C_Profile.settings.useFallbacks ~= false)
+    fallbackCheck:SetScript("OnClick", function() 
+        C_Profile.settings.useFallbacks = (this:GetChecked() == 1)
+        UPDATE_QUEUED = true 
+    end)
+
     local sizeSlider = CreateFrame("Slider", "ConsumablesSizeSlider", settingsTab, "OptionsSliderTemplate"); sizeSlider:SetWidth(180); sizeSlider:SetHeight(16);
     sizeSlider:SetPoint("TOPLEFT", 20, -230); sizeSlider:SetMinMaxValues(16, 64); sizeSlider:SetValueStep(2); sizeSlider:SetValue(C_Profile.settings.iconSize)
     getglobal("ConsumablesSizeSliderText"):SetText("Icon Size: " .. C_Profile.settings.iconSize); getglobal("ConsumablesSizeSliderLow"):SetText("16"); getglobal("ConsumablesSizeSliderHigh"):SetText("64")
@@ -2046,7 +2056,7 @@ eventFrame:SetScript("OnEvent", function()
                 settings = {
                     iconSize = 32, spacing = 4, catSpacing = 20, columns = 10, alignRight = false,
                     hideCombat = false, hidden = false, onlyRaid = false, hideActive = false, independent = false,
-                    showBackground = true, showTitles = true, mouseover = false, 
+                    showBackground = true, showTitles = true, mouseover = false, useFallbacks = true,
                     minimap = { hide = false, angle = 45, unlocked = false }
                 },
                 categories = { { name = "Consumables", buffs = {} } }
