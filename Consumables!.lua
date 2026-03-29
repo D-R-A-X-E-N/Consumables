@@ -646,12 +646,12 @@ local function UseItemOrSpell(dbEntry)
             for i = 1, GetNumRaidMembers() do
                 local name, _, subgroup = GetRaidRosterInfo(i)
                 if name == playerName then
-                    SendChatMessage(">> MISSING [" .. buffName .. "] << G" .. subgroup .. " (" .. playerClass .. ")", "RAID")
+                    SendChatMessage("|cffFF6B6B" .. class .. " requests " .. buffName .. " in Group " .. subgroup .. "|r", "RAID")
                     return
                 end
             end
         elseif GetNumPartyMembers() > 0 then
-            SendChatMessage(">> MISSING [" .. buffName .. "] << (" .. playerClass .. ")", "PARTY")
+            SendChatMessage("|cffFF6B6BRequesting " .. buffName .. "|r", "PARTY")
             return
         else
             DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Not in a group to request buffs.|r")
