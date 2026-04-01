@@ -112,6 +112,7 @@ local MASTER_DB = {
     { id=84040, name="Le Fishe Au Chocolat", icon="inv_misc_fishe_au_chocolate", bufficon="spell_misc_food" },
     { id=51711, name="Sour Mountain Berry", icon="INV_Misc_Food_74", bufficon="INV_Gauntlets_19" },
     { id=42163, name="Squid Eel Skewer", icon="INV_Misc_Food_68", bufficon="Spell_misc_food", checkTooltip="Agility increased by 20", fallback="Sour Mountain Berry" },
+    { id=42161, name="Crunchy Sandswept Carrots", icon="sandswept_carrots_2", bufficon="Spell_misc_food", checkTooltip="+32 Attack Power" },
     { id=83309, name="Empowering Herbal Salad", icon="inv_misc_food_salad", bufficon="spell_nature_healingway", checkTooltip="Healing Bonus" },
     { id=18045, name="Tender Wolf Steak", icon="inv_misc_food_47", bufficon="spell_misc_food" }, 
     { id=53015, name="Gurubashi Gumbo", icon="inv_misc_food_64", bufficon="spell_misc_food" },         
