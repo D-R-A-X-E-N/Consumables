@@ -106,7 +106,7 @@ local MASTER_DB = {
     { id=12217, name="Dragonbreath Chili", icon="inv_drink_17", bufficon="spell_fire_incinerate" },
     { id=60978, name="Danonzo's Tel'Abim Medley", icon="inv_misc_food_73", bufficon="spell_misc_food", checkTooltip="Haste" },
     { id=60977, name="Danonzo's Tel'Abim Delight", icon="inv_drink_21", bufficon="spell_misc_food", checkTooltip="Spell Damage" }, 
-    { id=60976, name="Danonzo's Tel'Abim Surprise", icon="inv_misc_food_92", bufficon="spell_misc_food", checkTooltip="Ranged Attack Power" },            
+    { id=60976, name="Danonzo's Tel'Abim Surprise", icon="inv_misc_food_92", bufficon="spell_misc_food", checkTooltip="Ranged Attack Power", fallback="Crunchy Sandswept Carrots" },            
     { id=51720, name="Power Mushroom", icon="inv_mushroom_14", bufficon="spell_misc_food" },
     { id=51717, name="Hardened Mushroom", icon="inv_mushroom_15", bufficon="spell_misc_food", bufficon="inv_boots_plate_03", checkTooltip="Increased Stamina" },
     { id=84040, name="Le Fishe Au Chocolat", icon="inv_misc_fishe_au_chocolate", bufficon="spell_misc_food" },
